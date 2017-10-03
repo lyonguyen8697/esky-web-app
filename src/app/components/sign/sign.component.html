@@ -1,29 +1,40 @@
 <div class="row">
     <div class="col-xs-6 col-md-6">
-        <h1>Đăng ký</h1>
+        <h1 class="float-left">Đăng </h1>
+        <div class="float-left">
+            <h1 class="float-left rotating" *ngIf="isSignUp; else signIn" @rotateInOut>ky</h1>
+            <ng-template #signIn>
+                <h1 class="float-left rotating" @rotateInOut>nhap</h1>
+            </ng-template>
+        </div>
     </div>
     <div class="col-xs-6 col-md-6">
-        <a href="#" class="float-right" (click)="isSignUp = !isSignUp">Đã có tài khoản?</a>
-        <!-- <a href="#" class="float-right" (click)="toggleSign()">Đã có tài khoản?</a> -->
+        <a class="float-right" (click)="toggle()"
+        data-toggle="collapse" href=".multi-collapse" 
+        aria-expanded="false" aria-controls="collapse1 collapse2">Đã có tài khoản?</a>
     </div>
 </div>
 
 
 <form>
     <div class="form-group">
-        <input type="text" class="form-control" placeholder="Tên đăng nhập">
+        <input type="email" class="form-control" name="email" placeholder="Email cua ban" [(ngModel)]="user.email">
     </div>
-    <div class="form-group" *ngIf="isSignUp" @fadeInOut>
-        <input type="text" class="form-control" placeholder="Tên hiển thị">
-    </div>
-    <div class="form-group">
-        <input type="password" class="form-control" placeholder="Mật khẩu">
-    </div>
-    <div class="form-group" *ngIf="isSignUp" @fadeInOut>
-        <input type="password" class="form-control" placeholder="Nhập lại mật khẩu">
+    <div class="collapse show multi-collapse" id="collapse1">
+        <div class="form-group">
+            <input type="text" class="form-control" name="username" placeholder="Tên hiển thị" [(ngModel)]="user.username">
+        </div>
     </div>
     <div class="form-group">
-        <button class="btn btn-success btn-lg btn-block">Đăng ký</button>
+        <input type="password" class="form-control" name="password" placeholder="Mật khẩu" [(ngModel)]="user.password">
+    </div>
+    <div class="collapse show multi-collapse" id="collapse2">
+        <div class="form-group">
+            <input type="password" class="form-control" placeholder="Nhập lại mật khẩu">
+        </div>
+    </div>
+    <div class="form-group">
+        <button type="button" class="btn btn-success btn-lg btn-block" (click)="sign()" [@changeColor]="state">{{stateName}}</button>
     </div>
     <div class="row">
             <div class="col-sm-6">

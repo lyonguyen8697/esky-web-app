@@ -2,3 +2,7 @@
     align-items: center;
     margin-bottom: 10px;
 }
+.rotating {
+    position: absolute;
+    margin-left: 10px;
+}

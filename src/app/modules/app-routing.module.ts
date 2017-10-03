@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { WelcomePageComponent } from '../components/welcome-page/welcome-page.component';
 
 const appRoutes: Routes = [
-    { path: '', component: WelcomePageComponent, pathMatch: 'full'}
+    { path: '', component: WelcomePageComponent}
 ];
 
 @NgModule({
