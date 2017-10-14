@@ -1,14 +1,17 @@
-<div class="card bg-info text-white">
-    <div class="card-body">
+<div class="card">
+        <div class="card-icon">
+            <img [src]="'assets/icons/' + lesson.icon" width="96px" height="96px">
+        </div>
+    <div class="card-body text-white" [ngClass]="'style-' + lesson.style">
         <h4 class="card-title">
-            {{title}}
+            {{lesson.title}}
         </h4>
-        <h6 class="card-subtitle mb-2 text-muted">
-            {{subtitle}}
-        </h6>
         <hr>
         <p class="card-text">
-            {{content}}
+            {{lesson.description}}
         </p>
+    </div>
+    <div class="card-footer bg-white text-secondary">
+        {{lesson.progress}}
     </div>
 </div>

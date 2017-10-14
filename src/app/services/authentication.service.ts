@@ -1,28 +1,50 @@
 import { Injectable } from '@angular/core';
+import { Http, Headers, Response } from '@angular/http';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+
+import { RequestHelper } from '../helpers/request.helper';
+import { Credentials } from '../models/credentials.models';
+
+import 'rxjs/add/operator/map';
 
 @Injectable()
 export class AuthenticationService {
 
-    isSignIn = false;
+    apiUrl = '/api/authenticate';
 
-    constructor(private router: Router) { }
+    constructor(private http: Http, private router: Router) { }
 
-    public signIn(email: string, password: string) {
-        console.log(email, password);
-        if (email === 'lyonguyen@gmail.com' && password === '752589') {
-            this.isSignIn = true;
+    signIn(credential: Credentials) {
+        return this.http.post(RequestHelper.getFullUrl(this.apiUrl),
+            JSON.stringify(credential),
+            { headers: RequestHelper.getHeaders()})
+            .subscribe(
+                (res) => this.signInSuccess(res),
+                (err) => this.signInError(err)
+            );
+    }
+
+    private signInSuccess(response: Response) {
+        const user = response.json();
+        console.log(user);
+        if (user && user.token) {
+            localStorage.setItem('user', JSON.stringify(user));
             this.router.navigate(['']);
-            console.log('checked');
         }
     }
 
-    public signOut() {
-
+    private signInError(error) {
+        console.log(error);
     }
 
-    public checkCredentials(): boolean {
-        return this.isSignIn;
+    signOut() {
+        localStorage.removeItem('user');
+        this.router.navigate(['welcome']);
+    }
+
+    checkCredentials(): boolean {
+        return localStorage.getItem('user') ? true : false;
     }
 
 }

@@ -1,9 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+
+import { Observable } from 'rxjs/Observable';
+
+ import { Lesson } from '../../models/lesson.model';
+ import { UserService } from '../../services/user.service';
 
 @Component({
     templateUrl: 'lesson-board.component.html',
-    styleUrls: ['lesson-board.component.css']
+    styleUrls: ['lesson-board.component.css'],
 })
-export class LessonBoardComponent {
+export class LessonBoardComponent implements OnInit {
 
+    lessons: Observable<Lesson[]>;
+
+    constructor(private userService: UserService) {}
+
+    ngOnInit() {
+        this.lessons = this.userService.getLessons();
+    }
 }

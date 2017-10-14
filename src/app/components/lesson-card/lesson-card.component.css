@@ -1,0 +1,48 @@
+.card-icon {
+    height: 150px;
+    width: 150px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+.card-icon img {
+    display: block;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    margin: auto;
+}
+.card-body {
+    height: 100px;
+    padding: 15px 10px 10px 150px;
+}
+.card-footer {
+    height: 50px;
+    padding-left: 150px;
+}
+.card-title {
+    margin: 0;
+}
+hr {
+    margin: 10px 0px 10px 0px;
+}
+.style-sky {
+    background: #1ECDCE linear-gradient(to top left, #48a7d1 0%, #1ECDCE 100%);
+}
+.style-sky hr {
+    background: #45FF48;
+}
+.style-violet {
+    background: #A445FF linear-gradient(136.51deg, #5599E8 0%, #9258FA 77.64%, #9951FC 86.04%, #9F4AFE 94.19%, #A445FF 100%);
+}
+.style-violet hr {
+    background: #44BFA3;
+}
+.style-pink {
+    background: #FF21D1 linear-gradient(to bottom right, #FF7400 0%, #FF21D1 100%);
+}
+.style-pink hr {
+    background: #FFE345;
+}

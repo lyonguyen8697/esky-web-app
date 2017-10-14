@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 
+import { Lesson } from '../../models/lesson.model';
+
 @Component({
     selector: 'app-lesson-card',
     templateUrl: 'lesson-card.component.html',
@@ -7,9 +9,6 @@ import { Component, Input } from '@angular/core';
 })
 export class LessonCardComponent {
 
-    @Input() title: string;
+    @Input() lesson: Lesson;
 
-    @Input() subtitle: string;
-
-    @Input() content: string;
 }

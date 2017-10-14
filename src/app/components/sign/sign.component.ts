@@ -9,7 +9,7 @@ import {
  } from '@angular/animations';
 
  import { AuthenticationService } from '../../services/authentication.service';
- import { User } from '../../models/user.model';
+ import { SignInfo } from '../../models/sign-info.model';
 
 @Component({
     selector: 'app-sign',
@@ -68,7 +68,7 @@ export class SignComponent {
 
     private isDone = true;
 
-    private user = new User();
+    private info = new SignInfo();
 
     constructor(private authService: AuthenticationService) { }
 
@@ -85,8 +85,7 @@ export class SignComponent {
     }
 
     private signIn() {
-        this.authService.signIn(this.user.email, this.user.password);
-        console.log(this.user);
+        this.authService.signIn({ email: this.info.email, password: this.info.password });
     }
 
     private toggle() {
