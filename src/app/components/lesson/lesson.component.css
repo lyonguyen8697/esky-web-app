@@ -1,0 +1,12 @@
+abc {
+    background: #b8d8d8;
+}
+.lesson-container {
+    display: flex;
+    align-items: center;
+    min-height: 100%;
+    height: 100%;
+}
+.question-answers {
+    width: 100%;
+}

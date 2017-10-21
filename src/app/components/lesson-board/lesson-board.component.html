@@ -2,9 +2,11 @@
     <h3 class="display-3">Lessons board</h3>
     <p class="lead">Here is your lessons. Enjoy it!</p>
     <div class="row">
-        <div *ngFor="let lesson of lessons | async" class="col-lg-6">
-            <app-lesson-card [lesson]="lesson">
-            </app-lesson-card>
+        <div *ngFor="let lesson of lessons$ | async" class="col-lg-6">
+            <a [routerLink]="['/study/lesson', lesson.id]">
+                <app-lesson-card [lesson]="lesson" (click)="navigate(lesson.id)">
+                </app-lesson-card>
+            </a>    
         </div>
     </div>
 </div>

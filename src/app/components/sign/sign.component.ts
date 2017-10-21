@@ -9,6 +9,7 @@ import {
  } from '@angular/animations';
 
  import { AuthenticationService } from '../../services/authentication.service';
+ import { rotateInOut } from '../../animations/rotate-in-out.animation';
  import { SignInfo } from '../../models/sign-info.model';
 
 @Component({
@@ -16,15 +17,7 @@ import {
     templateUrl: 'sign.component.html',
     styleUrls: ['sign.component.css'],
     animations: [
-        trigger('rotateInOut', [
-            transition(':enter', [
-                style({ transform: 'rotateX(90deg)'}),
-                animate('200ms 200ms')
-            ]),
-            transition(':leave', [
-                animate(200, style({ transform: 'rotateX(90deg)'}))
-            ])
-        ]),
+        rotateInOut(200),
         trigger('fadeInOut', [
             transition(':enter', [
                 style({ transform: 'translateY(-100%)', opacity: 0}),

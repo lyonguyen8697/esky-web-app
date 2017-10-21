@@ -1,0 +1,42 @@
+.question {
+    display: inline-block;
+}
+.speaker-icon {
+    cursor: pointer;
+    display: block;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    margin: auto;
+    width: 32px;
+    height: 32px;
+}
+.speaker-icon:hover {
+    opacity: 0.7;
+}
+.question-voice {
+    width: 64px;
+    height: 64px;
+    position: relative;
+    float: left;
+}
+.question-voice-only {
+    float: none;
+    margin: auto;
+}
+.question-voice-only .speaker-icon {
+    width: 64px;
+    height: 64px;
+}
+.question-phrase {
+    height: 64px;
+    margin: 0px 64px 0px 64px;
+    display: flex;
+    align-items: center;
+}
+.question-phrase h3 {
+    font-family: 'Nunito', sans-serif;
+    margin: auto;
+}

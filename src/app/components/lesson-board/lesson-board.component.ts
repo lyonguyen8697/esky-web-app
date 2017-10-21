@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
 
- import { Lesson } from '../../models/lesson.model';
- import { UserService } from '../../services/user.service';
+import { Lesson } from '../../models/lesson.model';
+import { UserService } from '../../services/user.service';
 
 @Component({
     templateUrl: 'lesson-board.component.html',
@@ -11,11 +12,15 @@ import { Observable } from 'rxjs/Observable';
 })
 export class LessonBoardComponent implements OnInit {
 
-    lessons: Observable<Lesson[]>;
+    lessons$: Observable<Lesson[]>;
 
-    constructor(private userService: UserService) {}
+    constructor(private userService: UserService, private router: Router) {}
 
     ngOnInit() {
-        this.lessons = this.userService.getLessons();
+        this.lessons$ = this.userService.getLessons();
+    }
+
+    navigate(id: string) {
+        this.router.navigate(['study/lesson', id]);
     }
 }

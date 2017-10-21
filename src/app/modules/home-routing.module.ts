@@ -11,6 +11,7 @@ const homeRoutes: Routes = [
         path: '',
         canActivate: [AuthGuard],
         component: HomePageComponent,
+        pathMatch: 'full',
         children: [
             {
                 path: '',

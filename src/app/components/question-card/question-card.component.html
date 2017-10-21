@@ -1,0 +1,21 @@
+<div class="card text-center card-shadow">
+    <div class="card-body p-5">
+        <div class="question">
+            <h3 class="card-title mb-4">
+                {{question?.question}}
+                <span *ngIf="question.caption">
+                    <small class="text-muted">#{{question.caption}}</small>
+                </span>
+            </h3>
+            <div class="question-voice-phrase" (click)="togglePhrase()">
+                <div class="question-voice" *ngIf="question.voice" [class.question-voice-only]="!question.phrase" (click)="speak()">
+                    <img class="speaker-icon" src="assets/icons/speaker.png">
+                </div>
+                <div class="question-phrase" *ngIf="question.phrase">
+                    <h3>{{question.phrase}}</h3>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

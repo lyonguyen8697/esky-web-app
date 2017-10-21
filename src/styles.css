@@ -1,1 +1,4 @@
 /* You can add global styles to this file, and also import other style files */
+.card-shadow {
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
+}
