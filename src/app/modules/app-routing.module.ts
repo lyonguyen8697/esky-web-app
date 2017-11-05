@@ -4,10 +4,22 @@ import { RouterModule, Routes } from '@angular/router';
 import { WelcomePageComponent } from '../components/welcome-page/welcome-page.component';
 import { PageNotFoundComponent } from '../components/page-not-found/page-not-found.component';
 
+import { SignOutGuard } from '../guards/sign-out.guard';
+
 const appRoutes: Routes = [
-    { path: 'welcome', component: WelcomePageComponent},
-    { path: '404', component: PageNotFoundComponent},
-    { path: '**', redirectTo: '404'}
+    {
+        path: 'welcome',
+        canActivate: [SignOutGuard],
+        component: WelcomePageComponent
+    },
+    {
+        path: '404',
+        component: PageNotFoundComponent
+    },
+    {
+        path: '**',
+        redirectTo: '404'
+    }
 ];
 
 @NgModule({

@@ -1,0 +1,13 @@
+a {
+    display: block;
+    width: 16px;
+    height: 16px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.success {
+    background-image: url(/assets/icons/success.png);
+}
+.error {
+    background-image: url(/assets/icons/error.png);
+}

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 import { Question } from '../../models/question.model';
 
@@ -7,12 +7,36 @@ import { Question } from '../../models/question.model';
     templateUrl: 'typing-answer-card.component.html',
     styleUrls: ['typing-answer-card.component.css']
 })
-
-export class TypingAnswerCardComponent implements OnInit {
+export class TypingAnswerCardComponent {
 
     @Input() question: Question;
 
-    constructor() { }
+    @Output() answer = new EventEmitter<boolean>();
 
-    ngOnInit() { }
+    value: string;
+
+    isCorrect: boolean;
+
+    disableCheck = true;
+
+    valueChange() {
+        if (this.value.trim()) {
+            this.disableCheck = false;
+        } else {
+            this.disableCheck = true;
+        }
+    }
+
+    submit(event) {
+        if (event) {
+            event.preventDefault();
+        }
+        if (this.value.trim().toLowerCase() === this.question.answer.trim().toLowerCase()) {
+            this.isCorrect = true;
+            this.answer.emit(true);
+        } else {
+            this.isCorrect = false;
+            this.answer.emit(false);
+        }
+    }
 }

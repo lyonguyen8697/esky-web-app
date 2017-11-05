@@ -1,0 +1,27 @@
+<div class="container">
+    <div [ngSwitch]="verifyCase">
+        <div *ngSwitchCase="0">
+            <div class="jumbotron text-center">
+                <h1 class="display-3">Xin chào {{user?.name}}!</h1>
+                <p class="lead">Xác nhận email của bạn để tiếp tục.</p>
+                <hr>
+                <p>Email xác nhận đã được gửi tới địa chỉ:</p>
+                <p>
+                    <strong>{{user?.email}}</strong>
+                </p>
+                <p>Kiểm tra email của bạn và click theo đường dẫn để hoàn tất quá trình đăng ký.</p>
+                <p>Không tìm thấy email? Gửi lại email xác nhận</p>
+            </div>
+        </div>
+        <div *ngSwitchCase="1">
+            <div class="jumbotron text-center">
+                <h1 class="display-3">Xác nhận thành công ^3^</h1>
+            </div>
+        </div>
+        <div *ngSwitchCase="2">
+            <div class="jumbotron text-center">
+                <h1 class="display-3">Xác nhận thất bại :(</h1>
+            </div>
+        </div>
+    </div>
+</div>

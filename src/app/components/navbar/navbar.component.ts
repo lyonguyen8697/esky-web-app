@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+
+import { AuthenticationService } from '../../services/authentication.service';
+import { User } from '../../models/user.model';
+
+declare var $: any;
 
 @Component({
     selector: 'app-navbar',
@@ -7,8 +12,25 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavbarComponent implements OnInit {
 
-    constructor() {}
+    user: User;
+
+    @Input() isSignedIn: boolean;
+
+    constructor(private authService: AuthenticationService) {}
 
     ngOnInit() {
+        this.user = User.getLocal();
+    }
+
+    signOut() {
+        this.authService.signOut();
+    }
+
+    toggleMenu() {
+        $('.user-menu').slideToggle(200);
+    }
+
+    hideMenu() {
+        $('.user-menu').slideUp(200);
     }
 }

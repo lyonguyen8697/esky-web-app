@@ -3,6 +3,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/share';
 
 import { LessonService } from '../../services/lesson.service';
 import { AudioService } from '../../services/audio.service';
@@ -16,33 +17,39 @@ import { AnswerType } from '../../enums/answer-type.enum';
     styleUrls: ['lesson.component.css'],
     animations: [
         animation,
-        slideInOut('1000ms')
+        slideInOut('200ms', false, '5%', 0)
     ]
 })
 
 export class LessonComponent implements OnInit {
 
-    questions$: Observable<Question[]>;
+    questions: Question[];
 
     answerType = AnswerType;
 
     questionIndex = 0;
 
-    test = true;
+    numberOfQuestions = 0;
 
-    constructor(private lessoService: LessonService,
+    progressValue = 0;
+
+    constructor(private lessonService: LessonService,
         private audioService: AudioService,
         private route: ActivatedRoute) { }
 
     ngOnInit() {
-        this.getQuestions();
+        setTimeout(() => this.getQuestions(), 2000);
+        // this.getQuestions();
     }
 
     getQuestions() {
-        this.questions$ = this.route.paramMap
+        this.route.paramMap
         .switchMap((params: ParamMap) => {
             const id = params.get('id');
-            return this.lessoService.get(id);
+            return this.lessonService.get(id);
+        }).subscribe(questions => {
+            this.questions = questions;
+            this.numberOfQuestions = questions.length;
         });
     }
 
@@ -57,13 +64,19 @@ export class LessonComponent implements OnInit {
 
     correctAnswer() {
         this.audioService.play(this.audioService.correct);
+        this.ajustProgressbar();
     }
 
     wrongAnswer() {
         this.audioService.play(this.audioService.wrong);
+        this.questions.push(this.questions[this.questionIndex]);
     }
 
     nextQuestion() {
         this.questionIndex++;
+    }
+
+    ajustProgressbar() {
+        this.progressValue += 100 / this.numberOfQuestions;
     }
 }

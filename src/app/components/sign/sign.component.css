@@ -6,3 +6,42 @@
     position: absolute;
     margin-left: 10px;
 }
+.form-group {
+    position: relative;
+}
+.form-group input {
+    padding-right: 38px;
+}
+.tooltip-container {
+    position: absolute;
+    top: 11px;
+    right: 11px;
+}
+.break-line {
+    position: relative;
+}
+.break-line small {
+    position: absolute;
+    width: 12%;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    transform: translateY(-50%);
+    text-align: center;
+    background: #caebf2;
+}
+.break-line hr {
+    border-color: #ff3b3f;
+}
+@media (min-width: 576px) {
+    .btn-google {
+        padding-right: 7px;
+    }
+    .btn-facebook {
+        padding-left: 7px;
+    }
+}
+.btn-google, .btn-facebook {
+    padding-bottom: 7px;
+}

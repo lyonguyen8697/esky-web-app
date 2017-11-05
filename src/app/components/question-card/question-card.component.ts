@@ -15,11 +15,13 @@ export class QuestionCardComponent implements OnInit {
     constructor(private speechService: SpeechService) { }
 
     ngOnInit() {
-        this.speak();
+        setTimeout(() => this.speak(), 200);
     }
 
     speak() {
-        this.speechService.speak(this.question.voice);
+        if (this.question.voice) {
+            this.speechService.speak(this.question.voice);
+        }
     }
 
     togglePhrase() {

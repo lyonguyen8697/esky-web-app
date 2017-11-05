@@ -2,47 +2,70 @@
     <div class="col-xs-6 col-md-6">
         <h1 class="float-left">Đăng </h1>
         <div class="float-left">
-            <h1 class="float-left rotating" *ngIf="isSignUp; else signIn" @rotateInOut>ky</h1>
+            <h1 class="float-left rotating" *ngIf="isSignUp; else signIn" @rotateInOut>ký</h1>
             <ng-template #signIn>
-                <h1 class="float-left rotating" @rotateInOut>nhap</h1>
+                <h1 class="float-left rotating" @rotateInOut>nhập</h1>
             </ng-template>
         </div>
     </div>
     <div class="col-xs-6 col-md-6">
-        <a class="float-right" (click)="toggle()"
-        data-toggle="collapse" href=".multi-collapse" 
-        aria-expanded="false" aria-controls="collapse1 collapse2">Đã có tài khoản?</a>
+        <a class="float-right" (click)="toggle(collapseName.classList.contains('collapsing'))" data-toggle="collapse" href=".multi-collapse" 
+        aria-expanded="false" aria-controls="collapseName collapseConfirmPass">Đã có tài khoản?</a>
     </div>
 </div>
-
-
-<form>
+<form #signForm="ngForm">
     <div class="form-group">
-        <input type="email" class="form-control" name="email" placeholder="Email cua ban" [(ngModel)]="info.email">
+        <input type="email" class="form-control" name="email" placeholder="Email của bạn" aria-label="email" required [(ngModel)]="info.email"
+            (ngModelChange)="onEmailChange()" (blur)="hideAllTooltip()" [class.is-valid]="info.emailError === false && isSignUp" [class.is-invalid]="info.emailError === true && isSignUp">
+        <div class="tooltip-container tooltip-email" [class.d-none]="info.emailError === null || !isSignUp">
+            <app-tooltip [title]="info.emailErrorMess" [isError]="info.emailError"></app-tooltip>
+        </div>
     </div>
-    <div class="collapse show multi-collapse" id="collapse1">
+    <div #collapseName class="collapse show multi-collapse" id="collapseName">
         <div class="form-group">
-            <input type="text" class="form-control" name="username" placeholder="Tên hiển thị" [(ngModel)]="info.name">
+            <input type="text" class="form-control" name="name" placeholder="Tên hiển thị" aria-label="name" required [(ngModel)]="info.name"
+                (ngModelChange)="onNameChange()" (blur)="hideAllTooltip()" [class.is-valid]="info.nameError === false && isSignUp" [class.is-invalid]="info.nameError === true && isSignUp">
+            <div class="tooltip-container tooltip-name" [class.d-none]="info.nameError === null || !isSignUp">
+                <app-tooltip [title]="info.nameErrorMess" [isError]="info.nameError"></app-tooltip>
+            </div>
         </div>
     </div>
     <div class="form-group">
-        <input type="password" class="form-control" name="password" placeholder="Mật khẩu" [(ngModel)]="info.password">
+        <input type="password" class="form-control" name="password" placeholder="Mật khẩu" aria-label="password" required [(ngModel)]="info.password"
+            (ngModelChange)="onPasswordChange()" (blur)="hideAllTooltip()" [class.is-valid]="info.passwordError === false && isSignUp" [class.is-invalid]="info.passwordError === true && isSignUp">
+        <div class="tooltip-container tooltip-password" [class.d-none]="info.passwordError === null || !isSignUp">
+            <app-tooltip [title]="info.passwordErrorMess" [isError]="info.passwordError"></app-tooltip>
+        </div>
     </div>
-    <div class="collapse show multi-collapse" id="collapse2">
+    <div class="collapse show multi-collapse" id="collapseConfirmPass">
         <div class="form-group">
-            <input type="password" class="form-control" placeholder="Nhập lại mật khẩu">
+            <input type="password" class="form-control" name="confirmPass" placeholder="Nhập lại mật khẩu" required [(ngModel)]="info.confirmPass"
+                (ngModelChange)="onConfirmPasswordChange()" (blur)="hideAllTooltip()" [class.is-valid]="info.confirmPassError === false && isSignUp"
+                [class.is-invalid]="info.confirmPassError === true && isSignUp">
+            <div class="tooltip-container tooltip-confirmPassword" [class.d-none]="info.confirmPassError === null || !isSignUp">
+                <app-tooltip [title]="info.confirmPassErrorMess" [isError]="info.confirmPassError"></app-tooltip>
+            </div>
         </div>
     </div>
     <div class="form-group">
-        <button type="button" class="btn btn-success btn-lg btn-block" (click)="sign()" [@changeColor]="state">{{stateName}}</button>
+        <button type="button" class="btn btn-success btn-lg btn-block" (click)="submit()" (blur)="hideAllTooltip()" [@changeColor]="state"
+            [disabled]="submitted">
+            {{isSignUp ? 'Đăng ký' : 'Đăng nhập' }}
+        </button>
+        <div class="invalid-feedback" [class.d-none]="!serverError">
+            {{serverError}}
+        </div>
+    </div>
+    <div class="break-line">
+        <hr>
+        <small>Hoặc</small>
     </div>
     <div class="row">
-            <div class="col-sm-6">
-                <button class="btn btn-danger btn-block">Google+</button>
-            </div>
-            <div class="col-sm-6">
-                <button class="btn btn-primary btn-block">Facebook</button>
-            </div>
+        <div class="col-sm-6 btn-google">
+            <button class="btn btn-danger btn-block">Google+</button>
+        </div>
+        <div class="col-sm-6 btn-facebook">
+            <button class="btn btn-primary btn-block">Facebook</button>
+        </div>
     </div>
 </form>
-

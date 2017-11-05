@@ -3,8 +3,11 @@ import { Http, Headers, Response } from '@angular/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { RequestHelper } from '../helpers/request.helper';
+import { EncryptService } from '../services/encrypt.service';
+import { RequestUtils } from '../utils/request.utils';
 import { Credentials } from '../models/credentials.models';
+import { User } from '../models/user.model';
+import { Role } from '../enums/role.emum';
 
 import 'rxjs/add/operator/map';
 
@@ -13,38 +16,60 @@ export class AuthenticationService {
 
     apiUrl = '/api/authenticate';
 
-    constructor(private http: Http, private router: Router) { }
+    redirectUrl: string;
 
-    signIn(credential: Credentials) {
-        return this.http.post(RequestHelper.getFullUrl(this.apiUrl),
+    constructor(private http: Http,
+        private router: Router,
+        private encryt: EncryptService) { }
+
+    signIn(credential: Credentials, error: string) {
+        this.encryptInfo(credential);
+        this.http.post(RequestUtils.getFullUrl(this.apiUrl),
             JSON.stringify(credential),
-            { headers: RequestHelper.getHeaders()})
+            { headers: RequestUtils.getHeaders()})
             .subscribe(
-                (res) => this.signInSuccess(res),
-                (err) => this.signInError(err)
+                res => this.signInSuccess(res),
+                res => this.signInError(res, error)
             );
     }
 
-    private signInSuccess(response: Response) {
-        const user = response.json();
-        console.log(user);
-        if (user && user.token) {
-            localStorage.setItem('user', JSON.stringify(user));
-            this.router.navigate(['']);
+    signInSuccess(res) {
+        User.setLocal(res.json());
+        if (User.getLocal().token) {
+            if (this.redirectUrl) {
+                this.router.navigate([this.redirectUrl]);
+            } else {
+                this.router.navigate(['']);
+            }
+        } else {
+            this.router.navigate(['verify']);
         }
     }
+    signInError(res, error: string) {
+        error = res.json().message;
+    }
 
-    private signInError(error) {
-        console.log(error);
+    encryptInfo(credential: Credentials) {
+        credential.password = this.encryt.encryptPassword(credential.password);
     }
 
     signOut() {
-        localStorage.removeItem('user');
+        User.removeLocal();
+        this.redirectUrl = null;
         this.router.navigate(['welcome']);
     }
 
     checkCredentials(): boolean {
-        return localStorage.getItem('user') ? true : false;
+        return User.getLocal() ? true : false;
+    }
+
+    checkVerify(): boolean {
+        return this.checkCredentials() ? User.getLocal().token != null : false;
+    }
+
+    userInRole(role: Role): boolean {
+        const userRole: Role = Role[User.getLocal().role];
+        return userRole >= role;
     }
 
 }

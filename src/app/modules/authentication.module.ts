@@ -1,19 +1,22 @@
 import { NgModule } from '@angular/core';
-import { Http, RequestOptions } from '@angular/http';
+import { XHRBackend, RequestOptions } from '@angular/http';
+import { Router } from '@angular/router';
 
 import { AuthenticationService } from '../services/authentication.service';
 import { AuthGuard } from '../guards/auth.guard';
-import { AuthHttp, AuthConfig } from 'angular2-jwt';
-import { authHttpServiceFactory } from '../factories/auth-http.factory';
+import { SignOutGuard } from '../guards/sign-out.guard';
+import { AuthenticationHttp } from '../services/authentication-http.service';
+import { authenticationHttpFactory } from '../factories/auth-http.factory';
 
 @NgModule({
     providers: [
         AuthenticationService,
         AuthGuard,
+        SignOutGuard,
         {
-          provide: AuthHttp,
-          useFactory: authHttpServiceFactory,
-          deps: [Http, RequestOptions]
+          provide: AuthenticationHttp,
+          useFactory: authenticationHttpFactory,
+          deps: [XHRBackend, RequestOptions, Router, AuthenticationService]
         }
       ]
 })

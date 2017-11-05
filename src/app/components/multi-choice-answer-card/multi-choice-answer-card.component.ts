@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 import { Question } from '../../models/question.model';
 import { Choice } from '../../models/choice.model';
@@ -8,7 +8,7 @@ import { Choice } from '../../models/choice.model';
     templateUrl: 'multi-choice-answer-card.component.html',
     styleUrls: ['multi-choice-answer-card.component.css']
 })
-export class MultiChoiceAnswerCardComponent implements OnInit {
+export class MultiChoiceAnswerCardComponent {
 
     @Input() question: Question;
 
@@ -16,11 +16,7 @@ export class MultiChoiceAnswerCardComponent implements OnInit {
 
     chooser: string;
 
-    constructor() { }
-
-    ngOnInit() { }
-
-    choose(choice: Choice) {
+    submit(choice: Choice) {
         this.chooser = choice.id;
         if (choice.id === this.question.answer) {
             this.answer.emit(true);

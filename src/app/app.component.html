@@ -1,3 +1,4 @@
-<app-navbar [class.d-none]="!showNavbar"></app-navbar>
+<ng-progress [minimum]="0.2" [maximum]="1.0" [color]="'#1ECDCE'" [showSpinner]="false"></ng-progress>
+<app-navbar [class.d-none]="!isShowNavbar" [isSignedIn]="isSignedIn"></app-navbar>
 <router-outlet></router-outlet>
 

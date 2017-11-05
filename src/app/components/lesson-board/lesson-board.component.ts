@@ -20,7 +20,4 @@ export class LessonBoardComponent implements OnInit {
         this.lessons$ = this.userService.getLessons();
     }
 
-    navigate(id: string) {
-        this.router.navigate(['study/lesson', id]);
-    }
 }

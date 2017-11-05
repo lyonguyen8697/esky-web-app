@@ -2,7 +2,7 @@ import {
     trigger,
     transition,
     query,
-    animateChild
+    animateChild,
  } from '@angular/animations';
 
 export const animation = trigger('animation', [

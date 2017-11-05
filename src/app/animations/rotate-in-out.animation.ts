@@ -8,11 +8,11 @@ import {
     keyframes
  } from '@angular/animations';
 
-export function rotateInOut(timing: number): AnimationTriggerMetadata  {
+export function rotateInOut(timing: string): AnimationTriggerMetadata  {
     return trigger('rotateInOut', [
         transition(':enter', [
             style({ transform: 'rotateX(90deg)'}),
-            animate(timing + 'ms ' + timing + 'ms')
+            animate(timing + ' ' + timing)
         ]),
         transition(':leave', [
             animate(timing, style({ transform: 'rotateX(90deg)'}))

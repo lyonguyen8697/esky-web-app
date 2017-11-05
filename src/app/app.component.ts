@@ -13,15 +13,30 @@ export class AppComponent implements OnInit {
 
     title = 'app';
 
-    showNavbar = false;
+    isShowNavbar = false;
 
-    urlRegex = new RegExp('^/study*');
+    isSignedIn = false;
+
+    urlHideNabar = new RegExp('^/study*');
+
+    urlSignOut = new RegExp('^/welcome');
 
     constructor(private router: Router) {}
 
     ngOnInit() {
+        this.subscribeShowNavbar();
+        this.subscribeSignedIn();
+    }
+
+    subscribeShowNavbar() {
         this.router.events
         .filter(event => event instanceof NavigationEnd)
-        .subscribe((event: NavigationEnd ) => this.showNavbar = this.urlRegex.test(event.urlAfterRedirects) ? false : true);
+        .subscribe((event: NavigationEnd ) => this.isShowNavbar = !this.urlHideNabar.test(event.urlAfterRedirects));
+    }
+
+    subscribeSignedIn() {
+        this.router.events
+        .filter(event => event instanceof NavigationEnd)
+        .subscribe((event: NavigationEnd) => this.isSignedIn = !this.urlSignOut.test(event.urlAfterRedirects));
     }
 }

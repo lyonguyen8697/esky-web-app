@@ -1,8 +1,11 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
+import { SharedModule } from './shared.module';
+import { StudyRoutingModule } from './study-routing.module';
 
 import { StudyPageComponent } from '../components/study-page/study-page.component';
 import { LessonComponent } from '../components/lesson/lesson.component';
+import { LessonProgressbarComponent } from '../components/lesson-progressbar/lesson-progressbar.component';
 import { QuestionCardComponent } from '../components/question-card/question-card.component';
 import { MultiChoiceAnswerCardComponent } from '../components/multi-choice-answer-card/multi-choice-answer-card.component';
 import { ArrangementAnswerCardComponent } from '../components/arrangement-answer-card/arrangement-answer-card.component';
@@ -15,12 +18,11 @@ import { SpeechService } from '../services/speech.service';
 import { AudioService } from '../services/audio.service';
 import { LessonGuard } from '../guards/lesson.guard';
 
-import { StudyRoutingModule } from './study-routing.module';
-
 @NgModule({
     declarations: [
         StudyPageComponent,
         LessonComponent,
+        LessonProgressbarComponent,
         QuestionCardComponent,
         MultiChoiceAnswerCardComponent,
         ArrangementAnswerCardComponent,
@@ -29,7 +31,7 @@ import { StudyRoutingModule } from './study-routing.module';
         ChallengeComponent
     ],
     imports: [
-        CommonModule,
+        SharedModule,
         StudyRoutingModule
     ],
     providers: [

@@ -1,28 +1,35 @@
 <div class="lesson-container">
-    <div class="question-answers" *ngIf="questions$ | async; let questions;">
-        <div [ngSwitch]="questionIndex">
-            <div *ngFor="let question of questions; let i = index">
-                <div *ngSwitchCase="i" @animation>
-                    <div class="mb-1 mb-md-2" @slideInOut>
-                        <app-question-card [question]="question"></app-question-card>
-                    </div>
-                    <div [ngSwitch]="question.answerType">
-                        <app-multi-choice-answer-card *ngSwitchCase="answerType.MultiChoice" [question]="question" (answer)="answer($event)">
-                        </app-multi-choice-answer-card>
-                        <app-arrangement-answer-card *ngSwitchCase="answerType.Arrangement" [question]="question" (answer)="answer($event)">
-                        </app-arrangement-answer-card>
-                        <app-speech-answer-card *ngSwitchCase="answerType.Speech" [question]="question" (answer)="answer($event)">
-                        </app-speech-answer-card>
-                        <app-typing-answer-card *ngSwitchCase="answerType.Typing" [question]="question" (answer)="answer($event)">
-                        </app-typing-answer-card>
+    <div class="lesson-items">
+        <div class="progressbar-container mb-1 mb-md-2">
+            <app-lesson-progressbar [value]="progressValue"></app-lesson-progressbar>
+        </div>
+        <div class="question-container" *ngIf="questions; else loading">
+            <div [ngSwitch]="questionIndex">
+                <div *ngFor="let question of questions; let i = index">
+                    <div *ngSwitchCase="i" @animation>
+                        <div class="animation" @slideInOut>
+                            <div class="mb-1 mb-md-2">
+                                <app-question-card [question]="question"></app-question-card>
+                            </div>
+                            <div [ngSwitch]="question.answerType">
+                                <app-multi-choice-answer-card *ngSwitchCase="answerType.MultiChoice" [question]="question" (answer)="answer($event)">
+                                </app-multi-choice-answer-card>
+                                <app-arrangement-answer-card *ngSwitchCase="answerType.Arrangement" [question]="question" (answer)="answer($event)">
+                                </app-arrangement-answer-card>
+                                <app-speech-answer-card *ngSwitchCase="answerType.Speech" [question]="question" (answer)="answer($event)">
+                                </app-speech-answer-card>
+                                <app-typing-answer-card *ngSwitchCase="answerType.Typing" [question]="question" (answer)="answer($event)">
+                                </app-typing-answer-card>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
+        <ng-template #loading>
+            <div class="spinner">
+                <spinner-component [spinnerShow]="true"></spinner-component>
+            </div>
+        </ng-template>
     </div>
 </div>
-<div *ngIf="test" >
-    <h1 @slideInOut>FUCKER</h1>
-</div>
-<button type="button" (click)="test = !test">FUCK</button>

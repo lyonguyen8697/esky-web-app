@@ -1,4 +1,19 @@
-<div class="card">
-    <textarea cols="30" rows="10"></textarea>
-    <button type="button" (click)="check()">Kiểm tra</button>
+<div class="card card-shadow">
+    <div class="card-body">
+        <div class="mb-2 mb-md-3">
+            <textarea class="form-control" rows="3" placeholder="Nhập đáp án"
+            [(ngModel)]="value"
+            (ngModelChange)="valueChange()"
+            (keydown.enter)="submit($event)"></textarea>
+        </div>
+        <div>
+            <button type="button" class="btn btn-info btn-block" 
+            (click)="submit()"
+            [disabled]="disableCheck"
+            [class.btn-correct]="isCorrect === true"
+            [class.btn-wrong]="isCorrect === false"
+            [class.btn-focus]="isCorrect !== undefined">Kiểm tra</button>
+        </div>
+        <div [class.blocker]="isCorrect !== undefined"></div>
+    </div>
 </div>

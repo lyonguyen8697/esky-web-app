@@ -1,6 +1,6 @@
 .card-icon {
-    height: 150px;
-    width: 150px;
+    height: 135px;
+    width: 135px;
     position: absolute;
     top: 0px;
     left: 0px;
@@ -15,12 +15,14 @@
     margin: auto;
 }
 .card-body {
-    height: 100px;
-    padding: 15px 10px 10px 150px;
+    height: 90px;
+    padding: 15px 10px 10px 135px;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
 }
 .card-footer {
-    height: 50px;
-    padding-left: 150px;
+    height: 45px;
+    padding-left: 135px;
 }
 .card-title {
     margin: 0;

@@ -1,9 +1,14 @@
-import { Http, RequestOptions } from '@angular/http';
-import { AuthHttp, AuthConfig } from 'angular2-jwt';
+import { XHRBackend, RequestOptions } from '@angular/http';
+import { Router } from '@angular/router';
+import { AuthenticationHttp } from '../services/authentication-http.service';
+import { AuthenticationService } from '../services/authentication.service';
 
-export function authHttpServiceFactory(http: Http, options: RequestOptions) {
-    return new AuthHttp(new AuthConfig({
-      tokenGetter: (() => JSON.parse(localStorage.getItem('user')).token),
-      globalHeaders: [{ 'Content-Type': 'application/json'}]
-    }), http, options);
+function authenticationHttpFactory(
+  backend: XHRBackend,
+  options: RequestOptions,
+  router: Router,
+  authService: AuthenticationService
+) {
+    return new AuthenticationHttp(backend, options, router, authService);
 }
+export { authenticationHttpFactory };

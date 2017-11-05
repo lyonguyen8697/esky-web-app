@@ -1,7 +1,49 @@
-<div class="navbar navbar-default bg-dark">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <div class="navbar-brand text-info"><span>e</span>Sky</div>
+<nav class="navbar navbar-expand-md navbar-light py-0" [class.bg-light]="isSignedIn">
+    <div class="container">
+        <a class="navbar-brand">eSky</a>
+        <div *ngIf="isSignedIn">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar">
+                <div class="navbar-nav ml-auto">
+                    <div class="navbar-item d-flex mx-3" href="#">
+                        <span class="m-auto">Coin</span>
+                    </div>
+                    <div class="navbar-item d-flex mx-3" href="#">
+                        <span class="m-auto">Level</span>
+                    </div>
+                    <div class="user-menu-container navbar-item mx-3" (clickOutside)="hideMenu()">
+                        <div class="nav-btn d-flex h-100" (click)="toggleMenu()">
+                            <span class="m-auto pl-2 pr-1">
+                                <img class="rounded-circle" src="https://yt3.ggpht.com/-p9eRJnFCuSA/AAAAAAAAAAI/AAAAAAAAAAA/vv1wS4dO3GY/s88-c-k-no-mo-rj-c0xffffff/photo.jpg"
+                                    alt="Avatar" width="32" height="32">
+                            </span>
+                            <span class="m-auto pl-1 pr-2">
+                                {{user.name}}
+                            </span>
+                        </div>
+                        <div class="user-menu bg-light rounded-bottom">
+                            <div class="my-2">
+                                <a class="nav-btn d-block px-3 py-2">
+                                    <i class="fa fa-user-circle" aria-hidden="true"></i>
+                                    <span class="px-2">Thông tin cá nhân</span>
+                                </a>
+                                <a class="nav-btn d-block px-3 py-2">
+                                    <i class="fa fa-users" aria-hidden="true"></i>
+                                    <span class="px-2">Bạn bè</span>
+                                </a>
+                                <hr class="my-2">
+                                <a (click)="signOut()" class="nav-btn d-block px-3 py-2">
+                                    <i class="fa fa-sign-out" aria-hidden="true"></i>
+                                    <span class="px-2">Đăng xuất</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</nav>

@@ -3,7 +3,7 @@ import { Http, Headers, Response } from '@angular/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { RequestHelper } from '../helpers/request.helper';
+import { RequestUtils } from '../utils/request.utils';
 import { Question } from '../models/question.model';
 
 import 'rxjs/add/operator/map';
@@ -16,7 +16,7 @@ export class LessonService {
     constructor(private http: Http) {}
 
     get(id: string): Observable<Question[]> {
-        return this.http.get(RequestHelper.getFullUrl(this.apiUrl + id))
+        return this.http.get(RequestUtils.getFullUrl(this.apiUrl + id))
         .map(res => res.json());
     }
 

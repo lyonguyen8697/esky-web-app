@@ -3,7 +3,7 @@
         <div class="row">
             <div *ngFor="let choice of question.choices" class="col-md-6">
                 <button type="button" class="btn btn-outline-info btn-block btn-lg"
-                (click)="choose(choice)" 
+                (click)="submit(choice)" 
                 [class.btn-correct]="chooser ? choice.id === question.answer : false"
                 [class.btn-wrong]="chooser ? choice.id !== question.answer : false"
                 [class.btn-focus]="choice.id === chooser">
