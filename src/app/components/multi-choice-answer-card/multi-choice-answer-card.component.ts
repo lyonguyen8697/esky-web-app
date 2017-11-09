@@ -1,14 +1,13 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 
 import { Question } from '../../models/question.model';
-import { Choice } from '../../models/choice.model';
 
 @Component({
     selector: 'app-multi-choice-answer-card',
     templateUrl: 'multi-choice-answer-card.component.html',
     styleUrls: ['multi-choice-answer-card.component.css']
 })
-export class MultiChoiceAnswerCardComponent {
+export class MultiChoiceAnswerCardComponent implements OnChanges {
 
     @Input() question: Question;
 
@@ -16,12 +15,20 @@ export class MultiChoiceAnswerCardComponent {
 
     chooser: string;
 
-    submit(choice: Choice) {
-        this.chooser = choice.id;
-        if (choice.id === this.question.answer) {
+    ngOnChanges() {
+        this.chooser = null;
+    }
+
+    submit(choiceIndex: string) {
+        this.chooser = choiceIndex;
+        if (this.checkAnswer(this.chooser)) {
             this.answer.emit(true);
         } else {
             this.answer.emit(false);
         }
+    }
+
+    checkAnswer(answer: string): boolean {
+        return this.question.answers.includes(answer);
     }
 }

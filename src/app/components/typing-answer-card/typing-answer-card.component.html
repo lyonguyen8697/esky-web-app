@@ -9,11 +9,11 @@
         <div>
             <button type="button" class="btn btn-info btn-block" 
             (click)="submit()"
-            [disabled]="disableCheck"
-            [class.btn-correct]="isCorrect === true"
-            [class.btn-wrong]="isCorrect === false"
-            [class.btn-focus]="isCorrect !== undefined">Kiểm tra</button>
+            [disabled]="disableSubmit"
+            [class.btn-correct]="isCorrect && submitted"
+            [class.btn-wrong]="!isCorrect && submitted"
+            [class.btn-focus]="submitted">Kiểm tra</button>
         </div>
-        <div [class.blocker]="isCorrect !== undefined"></div>
+        <div [class.blocker]="submitted"></div>
     </div>
 </div>

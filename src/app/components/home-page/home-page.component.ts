@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 
 import { AuthenticationService } from '../../services/authentication.service';
-import { UserService } from '../../services/user.service';
 
 @Component({
     templateUrl: 'home-page.component.html',
@@ -10,8 +9,7 @@ import { UserService } from '../../services/user.service';
 export class HomePageComponent {
 
     constructor(
-        private authService: AuthenticationService,
-        private userService: UserService
+        private authService: AuthenticationService
     ) { }
 
     signOut() {
@@ -19,6 +17,5 @@ export class HomePageComponent {
     }
 
     getMessage() {
-        this.userService.test().subscribe(res => console.log(res));
     }
 }

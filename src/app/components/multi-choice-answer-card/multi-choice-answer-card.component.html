@@ -1,13 +1,13 @@
 <div class="card card-shadow">
     <div class="card-body">
         <div class="row">
-            <div *ngFor="let choice of question.choices" class="col-md-6">
+            <div *ngFor="let choice of question.choices; let i = index" class="col-md-6">
                 <button type="button" class="btn btn-outline-info btn-block btn-lg"
-                (click)="submit(choice)" 
-                [class.btn-correct]="chooser ? choice.id === question.answer : false"
-                [class.btn-wrong]="chooser ? choice.id !== question.answer : false"
-                [class.btn-focus]="choice.id === chooser">
-                    {{choice.content}}
+                (click)="submit(i.toString())" 
+                [class.btn-correct]="chooser ? isCorrect(i.toString()) : false"
+                [class.btn-wrong]="chooser ? !isCorrect(i.toString()) : false"
+                [class.btn-focus]="i.toString() === chooser">
+                    {{choice}}
                 </button>
             </div>
         </div>

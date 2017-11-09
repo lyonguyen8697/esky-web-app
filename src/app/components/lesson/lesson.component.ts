@@ -5,10 +5,12 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/share';
 
+import { LearnerService } from '../../services/learner.service';
 import { LessonService } from '../../services/lesson.service';
 import { AudioService } from '../../services/audio.service';
 import { animation } from '../../animations/animation';
 import { slideInOut } from '../../animations/slide-in-out.animation';
+import { Lesson } from '../../models/lesson.model';
 import { Question } from '../../models/question.model';
 import { AnswerType } from '../../enums/answer-type.enum';
 
@@ -23,33 +25,47 @@ import { AnswerType } from '../../enums/answer-type.enum';
 
 export class LessonComponent implements OnInit {
 
+    lesson: Lesson;
+
     questions: Question[];
 
     answerType = AnswerType;
 
     questionIndex = 0;
 
-    numberOfQuestions = 0;
+    currentQuestion: Question;
 
     progressValue = 0;
 
-    constructor(private lessonService: LessonService,
+    nextQuestionDelay = 1000;
+
+    constructor(private learnerService: LearnerService,
+        private lessonService: LessonService,
         private audioService: AudioService,
         private route: ActivatedRoute) { }
 
     ngOnInit() {
-        setTimeout(() => this.getQuestions(), 2000);
-        // this.getQuestions();
+        this.getQuestions();
+    }
+
+    canDeactivate() {
+        this.learnerService.updateLessonRemains(this.lesson.id, this.getLessonRemains())
+        .subscribe();
+        return true;
     }
 
     getQuestions() {
-        this.route.paramMap
-        .switchMap((params: ParamMap) => {
-            const id = params.get('id');
-            return this.lessonService.get(id);
-        }).subscribe(questions => {
-            this.questions = questions;
-            this.numberOfQuestions = questions.length;
+        this.route.data
+        .subscribe(data => {
+            this.lesson = data.lesson.lesson;
+            this.questions = data.lesson.questions;
+            this.questionIndex = 0;
+            if (this.lesson.remains) {
+                this.arrangeQuestion();
+                this.questionIndex = this.questions.length - this.lesson.remains.length;
+                this.ajustProgressbar();
+            }
+            this.nextQuestion();
         });
     }
 
@@ -59,24 +75,49 @@ export class LessonComponent implements OnInit {
         } else {
            this.wrongAnswer();
         }
-        setTimeout(() => this.nextQuestion(), 1000);
+        setTimeout(() => this.nextQuestion(), this.nextQuestionDelay);
     }
 
     correctAnswer() {
         this.audioService.play(this.audioService.correct);
+        this.questionIndex++;
         this.ajustProgressbar();
     }
 
     wrongAnswer() {
         this.audioService.play(this.audioService.wrong);
-        this.questions.push(this.questions[this.questionIndex]);
+        const wrongQuestion = this.questions.splice(this.questionIndex, 1)[0];
+        this.questions.push(wrongQuestion);
+    }
+
+    skipQuestion() {
+        if (this.questionIndex < this.questions.length - 1) {
+            this.wrongAnswer();
+            setTimeout(() => this.nextQuestion(), this.nextQuestionDelay);
+        }
     }
 
     nextQuestion() {
-        this.questionIndex++;
+        this.currentQuestion = this.questions[this.questionIndex];
     }
 
     ajustProgressbar() {
-        this.progressValue += 100 / this.numberOfQuestions;
+        this.progressValue = this.questionIndex / this.questions.length * 100;
+    }
+
+    arrangeQuestion() {
+        this.lesson.remains.forEach(id => {
+            const question = this.questions.find(n => n.id === id);
+            this.questions.splice(this.questions.indexOf(question), 1);
+            this.questions.push(question);
+        });
+    }
+
+    getLessonRemains(): string[] {
+        const remains = new Array();
+        for (let i = this.questionIndex; i < this.questions.length; i++) {
+            remains.push(this.questions[i].id);
+        }
+        return remains;
     }
 }

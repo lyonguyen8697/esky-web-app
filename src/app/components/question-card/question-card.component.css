@@ -1,3 +1,16 @@
+.card {
+    position: relative;
+}
+.btn-skip {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    opacity: 0.6;
+}
+.close {
+    width: 24px;
+    height: 24px;
+}
 .question {
     display: inline-block;
 }

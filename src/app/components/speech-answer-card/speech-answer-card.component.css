@@ -1,0 +1,43 @@
+.card-body {
+    padding: 30px;
+}
+.microphone {
+    font-size: 3rem;
+    border: none;
+    background: none;
+    width: 68px;
+    height: 68px;
+    color: #a0c8ef;
+}
+.microphone.recognizing {
+    color: #30c8ef;
+}
+.text-recognized {
+    height: 2rem;
+}
+.balancer {
+    width: 45px;
+}
+.dot-container {
+    display: flex;
+    width: 45px;
+}
+.dot {
+    width: 8px;
+    height: 8px;
+    background: #30c8ef;
+}
+.dot-1 {
+    animation: slide 1s ease 0s infinite reverse;
+}
+.dot-2 {
+    animation: slide 1s ease 0.2s infinite reverse;
+}
+.dot-3 {
+    animation: slide 1s ease 0.4s infinite reverse;
+}
+@keyframes slide {
+    0% { transform: translateY(0)}
+    30% { transform: translateY(-10px)}
+    60% { transform: translateY(0)}
+}

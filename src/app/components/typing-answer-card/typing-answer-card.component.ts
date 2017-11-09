@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 
 import { Question } from '../../models/question.model';
 
@@ -7,7 +7,7 @@ import { Question } from '../../models/question.model';
     templateUrl: 'typing-answer-card.component.html',
     styleUrls: ['typing-answer-card.component.css']
 })
-export class TypingAnswerCardComponent {
+export class TypingAnswerCardComponent implements OnChanges {
 
     @Input() question: Question;
 
@@ -17,26 +17,43 @@ export class TypingAnswerCardComponent {
 
     isCorrect: boolean;
 
-    disableCheck = true;
+    submitted: boolean;
+
+    disableSubmit: boolean;
+
+    ngOnChanges() {
+        this.reset();
+    }
+
+    reset() {
+        this.submitted = false;
+        this.value = '';
+        this.disableSubmit = true;
+    }
 
     valueChange() {
         if (this.value.trim()) {
-            this.disableCheck = false;
+            this.disableSubmit = false;
         } else {
-            this.disableCheck = true;
+            this.disableSubmit = true;
         }
     }
 
     submit(event) {
+        this.submitted = true;
         if (event) {
             event.preventDefault();
         }
-        if (this.value.trim().toLowerCase() === this.question.answer.trim().toLowerCase()) {
+        if (this.checkAnswer(this.value)) {
             this.isCorrect = true;
             this.answer.emit(true);
         } else {
             this.isCorrect = false;
             this.answer.emit(false);
         }
+    }
+
+    checkAnswer(answer: string): boolean {
+        return this.question.answers.includes(answer);
     }
 }

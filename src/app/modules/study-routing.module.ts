@@ -7,6 +7,8 @@ import { ChallengeComponent } from '../components/challenge/challenge.component'
 
 import { AuthGuard } from '../guards/auth.guard';
 import { LessonGuard } from '../guards/lesson.guard';
+import { LessonReslover } from '../services/lesson.resolver.service';
+import { CanDeactivateGuard } from '../guards/can-deactivate.guard';
 
 const studyRoutes: Routes = [
     {
@@ -16,12 +18,16 @@ const studyRoutes: Routes = [
         children: [
             {
                 path: 'lesson/:id',
-                canActivate: [LessonGuard],
-                component: LessonComponent
+                canDeactivate: [CanDeactivateGuard],
+                component: LessonComponent,
+                resolve: {
+                    lesson: LessonReslover
+                }
             },
             {
                 path: 'lesson',
-                redirectTo: '/'
+                redirectTo: '',
+                pathMatch: 'full'
             },
             {
                 path: 'challenge',

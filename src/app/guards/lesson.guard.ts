@@ -9,11 +9,12 @@ export class LessonGuard implements CanActivate {
     constructor(private router: Router, private lessonService: LessonService) {}
 
     canActivate(route: ActivatedRouteSnapshot) {
-        if (this.lessonService.canAccess(route.paramMap.get('id'))) {
+        /*if (this.lessonService.canAccess(route.paramMap.get('id'))) {
             return true;
         }
         this.router.navigate(['']);
-        return false;
+        return false;*/
+        return true;
     }
 
 }

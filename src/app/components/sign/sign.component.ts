@@ -12,7 +12,6 @@ import {
 import { AuthenticationService } from '../../services/authentication.service';
 import { SignUpService } from '../../services/sign-up.service';
 import { SignUpValidatorService } from '../../services/sign-up-validator.service';
-import { UserService } from '../../services/user.service';
 import { User } from '../../models/user.model';
 import { TooltipService } from '../../services/tooltip.service';
 import { rotateInOut } from '../../animations/rotate-in-out.animation';
@@ -81,7 +80,6 @@ export class SignComponent {
         private authService: AuthenticationService,
         private signUpService: SignUpService,
         private validator: SignUpValidatorService,
-        private user: UserService,
         private tooltip: TooltipService) { }
 
     submit() {
@@ -155,7 +153,6 @@ export class SignComponent {
     }
 
     toggle(isCollapsing: boolean) {
-        console.log(isCollapsing);
         if (!isCollapsing) {
             this.toggleSign();
         }

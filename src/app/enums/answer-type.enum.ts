@@ -1,6 +1,6 @@
 export enum AnswerType {
-    MultiChoice,
-    Arrangement,
-    Speech,
-    Typing
+    ARRANGEMENT,
+    MULTI_CHOICE,
+    SPEECH,
+    TYPING
 }

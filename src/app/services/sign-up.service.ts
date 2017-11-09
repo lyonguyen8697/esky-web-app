@@ -20,14 +20,14 @@ export class SignUpService {
         private encrypt: EncryptService) {}
 
     checkEmailExists(email: string): Observable<boolean> {
-        return this.http.head(RequestUtils.getFullUrl('api/users/' + email))
+        return this.http.head(RequestUtils.getFullUrl('api/accounts/' + email))
         .map(() => true)
         .catch(() => Observable.of(false));
     }
 
     signUp(info: SignUpInfo, error: string) {
         const encryptInfo = this.encryptInfo(info);
-        this.http.post(RequestUtils.getFullUrl('api/users'), encryptInfo)
+        this.http.post(RequestUtils.getFullUrl('api/accounts'), encryptInfo)
         .subscribe(
             res => this.signUpSucess(res),
             res => this.signUpError(res, error)

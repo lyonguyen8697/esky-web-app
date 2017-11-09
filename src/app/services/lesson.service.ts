@@ -15,13 +15,9 @@ export class LessonService {
 
     constructor(private http: Http) {}
 
-    get(id: string): Observable<Question[]> {
+    getQuestions(id: string): Observable<Question[]> {
         return this.http.get(RequestUtils.getFullUrl(this.apiUrl + id))
         .map(res => res.json());
-    }
-
-    canAccess(id: string): boolean {
-        return id ? true : false;
     }
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 
 import { SpeechService } from '../../services/speech.service';
 import { Question } from '../../models/question.model';
@@ -8,13 +8,15 @@ import { Question } from '../../models/question.model';
     templateUrl: 'question-card.component.html',
     styleUrls: ['question-card.component.css']
 })
-export class QuestionCardComponent implements OnInit {
+export class QuestionCardComponent implements OnChanges {
 
     @Input() question: Question;
 
+    @Output() skip = new EventEmitter();
+
     constructor(private speechService: SpeechService) { }
 
-    ngOnInit() {
+    ngOnChanges() {
         setTimeout(() => this.speak(), 200);
     }
 
@@ -26,5 +28,9 @@ export class QuestionCardComponent implements OnInit {
 
     togglePhrase() {
         // this.question.phrase = this.question.phrase ? null : 'How are you';
+    }
+
+    skipQuestion() {
+        this.skip.emit();
     }
 }

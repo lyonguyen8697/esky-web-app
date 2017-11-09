@@ -1,3 +1,25 @@
 <div class="card">
-    <h1>This is Speech Answer Card</h1>
+    <div class="card-body">
+        <div class="mb-1">
+            <button class="microphone d-block m-auto" type="button" aria-label="Microphone" 
+            (click)="recognize()" [class.recognizing]="recognizing">
+                <i class="fa fa-microphone" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="text-recognized text-center d-flex justify-content-center">
+            <h3 class="text-muted" [class.d-none]="recognizing || submitted">Bấm nút để nói</h3>
+            <div class="balancer" [class.d-none]="!textRecognized || submitted"></div>
+            <h3 [class.text-success]="isCorrect && submitted"
+            [class.text-danger]="!isCorrect && submitted">
+                {{textRecognized}}
+            </h3>
+            <div class="dot-container justify-content-center align-items-end m-1"
+            [class.d-none]="!recognizing">
+                <div class="dot dot-1 rounded-circle m-1"></div>
+                <div class="dot dot-2 rounded-circle m-1"></div>
+                <div class="dot dot-3 rounded-circle m-1"></div>
+            </div>
+        </div>
+        <div class="blocker" [class.d-none]="!submitted"></div>
+    </div>
 </div>

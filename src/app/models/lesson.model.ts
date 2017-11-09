@@ -1,8 +1,10 @@
 export interface Lesson {
     id: string;
+    subject: string;
     title: string;
+    caption: string;
     description: string;
-    icon: string;
-    progress: string;
-    style: string;
+    level: string;
+    process: number;
+    remains: string[];
 }

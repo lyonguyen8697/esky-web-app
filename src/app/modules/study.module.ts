@@ -17,6 +17,8 @@ import { LessonService } from '../services/lesson.service';
 import { SpeechService } from '../services/speech.service';
 import { AudioService } from '../services/audio.service';
 import { LessonGuard } from '../guards/lesson.guard';
+import { LessonReslover } from '../services/lesson.resolver.service';
+import { CanDeactivateGuard } from '../guards/can-deactivate.guard';
 
 @NgModule({
     declarations: [
@@ -38,7 +40,9 @@ import { LessonGuard } from '../guards/lesson.guard';
         LessonService,
         SpeechService,
         AudioService,
-        LessonGuard
+        LessonGuard,
+        LessonReslover,
+        CanDeactivateGuard
     ]
 })
 export class StudyModule { }

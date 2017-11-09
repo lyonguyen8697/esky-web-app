@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { SpinnerComponentModule } from 'ng2-component-spinner';
 import { TooltipComponent } from '../components/tooltip/tooltip.component';
 
-import { UserService } from '../services/user.service';
+import { LearnerService } from '../services/learner.service';
 import { EncryptService } from '../services/encrypt.service';
 import { TooltipService } from '../services/tooltip.service';
 
@@ -24,7 +24,7 @@ import { TooltipService } from '../services/tooltip.service';
     ],
     providers: [
         TooltipService,
-        UserService,
+        LearnerService,
         EncryptService
     ]
 })

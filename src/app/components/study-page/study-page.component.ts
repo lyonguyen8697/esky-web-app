@@ -8,7 +8,12 @@ import 'rxjs/add/operator/switchMap';
     styleUrls: ['study-page.component.css']
 })
 export class StudyPageComponent implements OnInit {
-    constructor() { }
+
+    constructor(private router: Router) { }
 
     ngOnInit() { }
+
+    back() {
+        this.router.navigate(['']);
+    }
 }

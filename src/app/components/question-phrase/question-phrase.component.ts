@@ -1,11 +1,11 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'app-question-phrase',
     templateUrl: 'question-phrase.component.html',
     styleUrls: ['question-phrase.component.css']
 })
-export class QuestionPhraseComponent implements OnChanges {
+export class QuestionPhraseComponent {
 
     @Input() phrase: string;
 
@@ -15,7 +15,4 @@ export class QuestionPhraseComponent implements OnChanges {
         console.log(this.regex.exec('hello __ every__'));
     }
 
-    ngOnChanges() {
-
-    }
 }
