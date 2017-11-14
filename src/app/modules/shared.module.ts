@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { SpinnerComponentModule } from 'ng2-component-spinner';
 import { TooltipComponent } from '../components/tooltip/tooltip.component';
+import { ProgressbarComponent } from '../components/progressbar/progressbar.component';
 
 import { LearnerService } from '../services/learner.service';
 import { EncryptService } from '../services/encrypt.service';
@@ -14,13 +15,15 @@ import { TooltipService } from '../services/tooltip.service';
         CommonModule
     ],
     declarations: [
-        TooltipComponent
+        TooltipComponent,
+        ProgressbarComponent
     ],
     exports: [
         CommonModule,
         FormsModule,
         SpinnerComponentModule,
-        TooltipComponent
+        TooltipComponent,
+        ProgressbarComponent
     ],
     providers: [
         TooltipService,

@@ -1,3 +1,34 @@
 <div class="card">
-    <h1>This is Arrangement Answer</h1>
+    <div class="card-body text-center">
+        <div class="fragment-container mb-4">
+            <div class="answer-fragments d-inline-flex justify-content-center">
+                <div *ngFor="let choice of question?.choices" (click)="discard('#' + fragment.id)" 
+                class="fragment hide rounded text-center p-1 ml-1 mt-1 mb-1"
+                [class.bg-sky]="!submitted"
+                [class.bg-success]="isCorrect && submitted"
+                [class.bg-danger]="!isCorrect && submitted"
+                #fragment>
+                </div>
+            </div>
+        </div>
+        <div class="fragment-container mb-4">
+            <div class="choice-fragments d-flex justify-content-center">
+                <div *ngFor="let choice of question?.choices; let i = index" (click)="append('#' + fragment.id)" 
+                [id]="'fragment-' + i" 
+                class="fragment rounded text-center bg-sky p-1 ml-1 mt-1 mb-1"
+                #fragment>
+                    {{choice}}
+                </div>
+            </div>
+        </div>
+        <div>
+            <button type="button" class="btn btn-info btn-block" 
+            (click)="submit()"
+            [disabled]="disableSubmit"
+            [class.btn-correct]="isCorrect && submitted"
+            [class.btn-wrong]="!isCorrect && submitted"
+            [class.btn-focus]="submitted">Kiểm tra</button>
+        </div>
+    </div>
+    <div [class.blocker]="submitted"></div>
 </div>

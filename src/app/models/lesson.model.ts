@@ -5,6 +5,7 @@ export interface Lesson {
     caption: string;
     description: string;
     level: string;
-    process: number;
+    progress: number;
     remains: string[];
+    passed: boolean;
 }

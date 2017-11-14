@@ -36,6 +36,7 @@ export class SpeechAnswerCardComponent implements OnChanges {
     }
 
     reset() {
+        this.speech.stopRecognize();
         this.textRecognized = '';
         this.recognizing = false;
         this.isCorrect = false;

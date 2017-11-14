@@ -29,8 +29,8 @@ export class LearnerService {
         .map(res => res.json());
     }
 
-    updateLessonRemains(lessonId: string, remains: string[]): Observable<any> {
-        return this.authHttp.put(RequestUtils.getFullUrl(this.apiUrl + '/lessons/' + lessonId), remains);
+    updateLessonProgress(lessonId: string, progress: number, remains: string[]): Observable<any> {
+        return this.authHttp.put(RequestUtils.getFullUrl(this.apiUrl + '/lessons/' + lessonId), { progress: progress, remains: remains });
     }
 
     test(): Observable<string> {

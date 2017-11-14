@@ -1,0 +1,11 @@
+<div class="progress"
+[style.height]="height">
+    <div class="progress-bar" role="progressbar"
+    [ngClass]="[backgroundClass]"
+    [class.progress-bar-animated]="animated"
+    [class.progress-bar-striped]="striped"
+    [attr.aria-valuenow]="value" 
+    [attr.aria-valuemin]="minValue"
+    [attr.aria-valuemax]="maxValue"
+    [style.width]="value + '%'"></div>
+</div>

@@ -20,9 +20,13 @@
     border-top-left-radius: 0.25rem;
     border-top-right-radius: 0.25rem;
 }
+.card-text {
+    font-size: 0.8rem;
+}
 .card-footer {
     height: 45px;
     padding-left: 135px;
+    padding-right: 10px;
 }
 .card-title {
     margin: 0;
@@ -30,21 +34,40 @@
 hr {
     margin: 10px 0px 10px 0px;
 }
-.style-sky {
+.lesson-info {
+    font-size: 0.9rem;
+    margin-bottom: 2px;
+    color: black;
+}
+.lesson-level i {
+    color: #1e1e86;
+}
+.lesson-star i {
+    color: #f1f15f;
+}
+.lesson-passed {
+    color: gray;
+}
+.lesson-passed.passed {
+    color: #9c9c0c;
+}
+.subject-essential {
     background: #1ECDCE linear-gradient(to top left, #48a7d1 0%, #1ECDCE 100%);
 }
-.style-sky hr {
+.subject-essential hr {
     background: #45FF48;
 }
-.style-violet {
+.subject-advanced {
     background: #A445FF linear-gradient(136.51deg, #5599E8 0%, #9258FA 77.64%, #9951FC 86.04%, #9F4AFE 94.19%, #A445FF 100%);
 }
-.style-violet hr {
+.subject-advanced hr {
     background: #44BFA3;
 }
-.style-pink {
-    background: #FF21D1 linear-gradient(to bottom right, #FF7400 0%, #FF21D1 100%);
+.subject-remenber {
+    background: #16D4BE linear-gradient(304.95deg, #009E8A 0%, #16D4BE 100%);
+    /*background: #FF21D1 linear-gradient(to bottom right, #FF7400 0%, #FF21D1 100%);*/
 }
-.style-pink hr {
-    background: #FFE345;
+.subject-remenber hr {
+    background: #45FF48;
+    /*background: #FFE345;*/
 }

@@ -37,6 +37,8 @@ export class LessonComponent implements OnInit {
 
     progressValue = 0;
 
+    nextQuestionDelaying = false;
+
     nextQuestionDelay = 1000;
 
     constructor(private learnerService: LearnerService,
@@ -49,9 +51,13 @@ export class LessonComponent implements OnInit {
     }
 
     canDeactivate() {
-        this.learnerService.updateLessonRemains(this.lesson.id, this.getLessonRemains())
-        .subscribe();
+        this.updateLessonProgress();
         return true;
+    }
+
+    updateLessonProgress() {
+        this.learnerService.updateLessonProgress(this.lesson.id, this.progressValue, this.getLessonRemains())
+        .subscribe();
     }
 
     getQuestions() {
@@ -70,6 +76,7 @@ export class LessonComponent implements OnInit {
     }
 
     answer(event) {
+        this.nextQuestionDelaying = true;
         if (event) {
             this.correctAnswer();
         } else {
@@ -91,7 +98,8 @@ export class LessonComponent implements OnInit {
     }
 
     skipQuestion() {
-        if (this.questionIndex < this.questions.length - 1) {
+        if (this.questionIndex < this.questions.length - 1 && !this.nextQuestionDelaying) {
+            this.nextQuestionDelaying = true;
             this.wrongAnswer();
             setTimeout(() => this.nextQuestion(), this.nextQuestionDelay);
         }
@@ -99,6 +107,7 @@ export class LessonComponent implements OnInit {
 
     nextQuestion() {
         this.currentQuestion = this.questions[this.questionIndex];
+        this.nextQuestionDelaying = false;
     }
 
     ajustProgressbar() {

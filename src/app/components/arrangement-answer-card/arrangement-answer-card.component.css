@@ -1,0 +1,31 @@
+.fragment-container {
+    height: 2em;
+}
+.answer-fragments {
+    border-bottom: 2px solid #ff3b3f;
+}
+.fragment {
+    min-width: 2em;
+    height: 2em;
+}
+.fragment.hide {
+    min-width: 0;
+}
+.fragment:hover {
+    opacity: 0.7;
+    cursor: pointer;
+}
+.fragment:active {
+    background: #ff3b3f !important;
+    opacity: 1;
+}
+.fragment:not(.hide):first-child {
+    margin-left: 0 !important;
+}
+.hide {
+    display: none;
+    visibility: hidden;
+}
+.bg-danger {
+    background: #ff2d49fd !important;
+}

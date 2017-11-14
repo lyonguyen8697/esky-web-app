@@ -17,6 +17,7 @@ export class QuestionCardComponent implements OnChanges {
     constructor(private speechService: SpeechService) { }
 
     ngOnChanges() {
+        this.speechService.cancelSpeak();
         setTimeout(() => this.speak(), 200);
     }
 

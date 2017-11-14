@@ -1,8 +1,8 @@
 <div class="card card-shadow">
     <div class="card-icon">
-        <img [src]="'assets/icons/' + lesson.icon" width="96px" height="96px">
+        <img [src]="'assets/icons/subjects/' + lesson.subject + '.png'" width="96px" height="96px">
     </div>
-    <div class="card-body text-white" [ngClass]="'style-' + lesson.style">
+    <div class="card-body text-white" [ngClass]="'subject-' + lesson.subject">
         <h6 class="card-title">
             {{lesson.title}}
         </h6>
@@ -11,7 +11,21 @@
             {{lesson.description}}
         </p>
     </div>
-    <div class="card-footer bg-white text-secondary">
-        {{lesson.remains}}
+    <div class="card-footer bg-white py-2">
+        <div class="lesson-info d-flex justify-content-around">
+            <div class="lesson-level">
+                {{lesson.level}}
+                <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+            </div>
+            <div class="lesson-star">
+                25
+                <i class="fa fa-star" aria-hidden="true"></i>
+            </div>
+            <div class="lesson-passed" [class.passed]="lesson.passed">
+                <i class="fa fa-trophy" aria-hidden="true"></i>
+            </div>
+        </div>
+        <app-progressbar [value]="lesson.progress" [height]="'5px'" [backgroundClass]="'bg-warning'"></app-progressbar>
+        <!-- <i class="fa fa-trophy" aria-hidden="true"></i> -->
     </div>
 </div>

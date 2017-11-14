@@ -1,30 +1,12 @@
 <div class="lesson-container">
     <div class="lesson-items">
         <div class="progressbar-container mb-1 mb-md-2">
-            <app-lesson-progressbar [value]="progressValue"></app-lesson-progressbar>
+            <app-progressbar [value]="progressValue" 
+            [striped]="true" 
+            [animated]="true" 
+            [backgroundClass]="'bg-warning'"></app-progressbar>
         </div>
         <div class="question-container" *ngIf="questions; else loading">
-            <!-- <div [ngSwitch]="questionIndex">
-                <div *ngFor="let question of questions; let i = index">
-                    <div *ngSwitchCase="i" @animation>
-                        <div class="animation" @slideInOut>
-                            <div class="mb-1 mb-md-2">
-                                <app-question-card [question]="question" (skip)="skipQuestion()"></app-question-card>
-                            </div>
-                            <div [ngSwitch]="question.answerType">
-                                <app-arrangement-answer-card *ngSwitchCase="answerType[0]" [question]="question" (answer)="answer($event)">
-                                </app-arrangement-answer-card>
-                                <app-multi-choice-answer-card *ngSwitchCase="answerType[1]" [question]="question" (answer)="answer($event)">
-                                </app-multi-choice-answer-card>
-                                <app-speech-answer-card *ngSwitchCase="answerType[2]" [question]="question" (answer)="answer($event)">
-                                </app-speech-answer-card>
-                                <app-typing-answer-card *ngSwitchCase="answerType[3]" [question]="question" (answer)="answer($event)">
-                                </app-typing-answer-card>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
             <div class="mb-1 mb-md-2">
                 <app-question-card [question]="currentQuestion" (skip)="skipQuestion()"></app-question-card>
             </div>
