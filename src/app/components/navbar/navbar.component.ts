@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnChanges, Input } from '@angular/core';
 
 import { AuthenticationService } from '../../services/authentication.service';
+import { UserService } from '../../services/user.service';
 import { User } from '../../models/user.model';
 
 declare var $: any;
@@ -10,16 +11,17 @@ declare var $: any;
     templateUrl: 'navbar.component.html',
     styleUrls: ['navbar.component.css']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnChanges {
 
     user: User;
 
     @Input() isSignedIn: boolean;
 
-    constructor(private authService: AuthenticationService) {}
+    constructor(private authService: AuthenticationService,
+                private userService: UserService) {}
 
-    ngOnInit() {
-        this.user = User.getLocal();
+    ngOnChanges() {
+        this.user = this.userService.getLocal();
     }
 
     signOut() {

@@ -13,7 +13,6 @@ import { Observable } from 'rxjs/Observable';
 
 import { AuthenticationService } from '../services/authentication.service';
 import { RequestUtils } from '../utils/request.utils';
-import { User } from '../models/user.model';
 import { ErrorMessage } from '../models/error-message.model';
 
 import 'rxjs/add/operator/catch';
@@ -49,9 +48,7 @@ export class AuthenticationHttp extends Http {
     handleError(res: Response) {
         const error: ErrorMessage = res.json();
         if (error.statusCode === 401) {
-            this.authService.redirectUrl = this.router.url;
-            User.removeLocal();
-            this.router.navigate(['welcome']);
+            this.authService.requireSignIn(this.router.url);
         } else if (error.statusCode === 403) {
             this.router.navigate(['']);
         }

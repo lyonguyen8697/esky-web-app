@@ -1,0 +1,35 @@
+.card-title {
+    font-family: "Nunito", sans-serif;
+}
+.experience-bonus {
+    width: 120px;
+    font-size: 1.5rem;
+}
+.level-circle {
+    position: relative;
+}
+.level {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.level span {
+    font-size: 3rem;
+}
+.cup {
+    width: 120px;
+}
+.result-buttons {
+    max-width: 400px;
+}
+.btn-refresh, .btn-placer {
+    width: 2.5rem;
+}
+@media (min-width: 768px) {
+    .btn-refresh, .btn-placer {
+        width: 25%;
+    }
+}
+.btn-continue {
+    width: 50%;
+}

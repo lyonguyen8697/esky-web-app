@@ -10,6 +10,7 @@ import { MultiChoiceAnswerCardComponent } from '../components/multi-choice-answe
 import { ArrangementAnswerCardComponent } from '../components/arrangement-answer-card/arrangement-answer-card.component';
 import { SpeechAnswerCardComponent } from '../components/speech-answer-card/speech-answer-card.component';
 import { TypingAnswerCardComponent } from '../components/typing-answer-card/typing-answer-card.component';
+import { ResultCardComponent } from '../components/result-card/result-card.component';
 import { ChallengeComponent } from '../components/challenge/challenge.component';
 
 import { LessonService } from '../services/lesson.service';
@@ -29,6 +30,7 @@ import { CanDeactivateGuard } from '../guards/can-deactivate.guard';
         ArrangementAnswerCardComponent,
         SpeechAnswerCardComponent,
         TypingAnswerCardComponent,
+        ResultCardComponent,
         ChallengeComponent
     ],
     imports: [

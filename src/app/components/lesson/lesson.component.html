@@ -7,22 +7,36 @@
             [backgroundClass]="'bg-warning'"></app-progressbar>
         </div>
         <div class="question-container" *ngIf="questions; else loading">
-            <div class="mb-1 mb-md-2">
-                <app-question-card [question]="currentQuestion" (skip)="skipQuestion()"></app-question-card>
+            <div *ngIf="questions.length > 0; else error">
+                <div *ngIf="!finished; else finish">
+                    <div class="mb-1 mb-md-2" [@slideInOut]="slideState">
+                        <app-question-card [question]="currentQuestion" (skip)="skipQuestion()"></app-question-card>
+                    </div>
+                    <div [ngSwitch]="currentQuestion.answerType" [@slideInOutDelay]="slideState">
+                        <app-arrangement-answer-card *ngSwitchCase="answerType[0]" [question]="currentQuestion" [isCorrect]="isCorrect" (answer)="answer($event)">
+                        </app-arrangement-answer-card>
+                        <app-multi-choice-answer-card *ngSwitchCase="answerType[1]" [question]="currentQuestion" [isCorrect]="isCorrect" (answer)="answer($event)">
+                        </app-multi-choice-answer-card>
+                        <app-speech-answer-card *ngSwitchCase="answerType[2]" [question]="currentQuestion" [isCorrect]="isCorrect" (answer)="answer($event)">
+                        </app-speech-answer-card>
+                        <app-typing-answer-card *ngSwitchCase="answerType[3]" [question]="currentQuestion" [isCorrect]="isCorrect" (answer)="answer($event)">
+                        </app-typing-answer-card>
+                    </div>
+                </div>
+                <ng-template #finish>
+                    <div class="lesson-result" @slideInOut>
+                        <app-result-card [learner]="learner" [experienceBonus]="experience"></app-result-card>
+                    </div>
+                </ng-template>
             </div>
-            <div [ngSwitch]="currentQuestion.answerType">
-                <app-arrangement-answer-card *ngSwitchCase="answerType[0]" [question]="currentQuestion" (answer)="answer($event)">
-                </app-arrangement-answer-card>
-                <app-multi-choice-answer-card *ngSwitchCase="answerType[1]" [question]="currentQuestion" (answer)="answer($event)">
-                </app-multi-choice-answer-card>
-                <app-speech-answer-card *ngSwitchCase="answerType[2]" [question]="currentQuestion" (answer)="answer($event)">
-                </app-speech-answer-card>
-                <app-typing-answer-card *ngSwitchCase="answerType[3]" [question]="currentQuestion" (answer)="answer($event)">
-                </app-typing-answer-card>
-            </div>
+            <ng-template #error>
+                <h1 class="text-danger text-center m-5" @slideInOut>
+                    Lỗi! Vui lòng quay lại
+                </h1>
+            </ng-template>
         </div>
         <ng-template #loading>
-            <div class="spinner">
+            <div class="spinner" @slideInOut>
                 <spinner-component [spinnerShow]="true"></spinner-component>
             </div>
         </ng-template>

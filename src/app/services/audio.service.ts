@@ -7,6 +7,10 @@ export class AudioService {
 
     wrong = 'assets/sounds/wrong.mp3';
 
+    win = 'assets/sounds/win.mp3';
+
+    ding = 'assets/sounds/ding.mp3';
+
     play(source: string) {
         const audio = new Audio(source);
         audio.load();

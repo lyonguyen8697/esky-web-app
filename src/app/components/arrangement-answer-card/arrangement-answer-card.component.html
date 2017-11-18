@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-body text-center">
         <div class="fragment-container mb-4">
-            <div class="answer-fragments d-inline-flex justify-content-center">
+            <div *ngIf="resetFlag" class="answer-fragments d-inline-flex justify-content-center">
                 <div *ngFor="let choice of question?.choices" (click)="discard('#' + fragment.id)" 
                 class="fragment hide rounded text-center p-1 ml-1 mt-1 mb-1"
                 [class.bg-sky]="!submitted"
@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="fragment-container mb-4">
-            <div class="choice-fragments d-flex justify-content-center">
+            <div *ngIf="resetFlag" class="choice-fragments d-flex justify-content-center">
                 <div *ngFor="let choice of question?.choices; let i = index" (click)="append('#' + fragment.id)" 
                 [id]="'fragment-' + i" 
                 class="fragment rounded text-center bg-sky p-1 ml-1 mt-1 mb-1"

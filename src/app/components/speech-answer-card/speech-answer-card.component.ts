@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, Input, Output, EventEmitter } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
 
@@ -15,13 +15,13 @@ export class SpeechAnswerCardComponent implements OnChanges {
 
     @Input() question: Question;
 
-    @Output() answer = new EventEmitter<boolean>();
+    @Input() isCorrect: boolean;
+
+    @Output() answer = new EventEmitter<string>();
 
     textRecognized: string;
 
     recognizing: boolean;
-
-    isCorrect: boolean;
 
     submitted: boolean;
 
@@ -31,22 +31,23 @@ export class SpeechAnswerCardComponent implements OnChanges {
 
     constructor(private speech: SpeechService) { }
 
-    ngOnChanges() {
-        this.reset();
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.question || changes.isCorrect.currentValue === null) {
+            this.reset();
+        }
     }
 
     reset() {
         this.speech.stopRecognize();
         this.textRecognized = '';
         this.recognizing = false;
-        this.isCorrect = false;
         this.submitted = false;
     }
 
     recognize() {
         this.recognizing = true;
-        const words = this.isWord(this.question.answers[0]) ? this.question.answers : undefined;
-        this.speech.recognize(words)
+        const words = this.isWord(this.question.phrase) ? this.question.phrase : undefined;
+        this.speech.recognize([words])
         .subscribe(
             result => {
                 if (!this.submitted) {
@@ -55,9 +56,7 @@ export class SpeechAnswerCardComponent implements OnChanges {
                     } else {
                         this.textRecognized = result;
                     }
-                    if (this.checkAnswer(this.textRecognized)) {
-                        this.submit();
-                    }
+                    this.submit();
                 }
             },
             error => {
@@ -81,13 +80,7 @@ export class SpeechAnswerCardComponent implements OnChanges {
         this.speech.stopRecognize();
         this.recognizing = false;
         this.submitted = true;
-        if (this.checkAnswer(this.textRecognized)) {
-            this.isCorrect = true;
-            this.answer.emit(true);
-        } else {
-            this.isCorrect = false;
-            this.answer.emit(false);
-        }
+        this.answer.emit(this.textRecognized);
     }
 
     isWord(s: string): boolean {
@@ -96,9 +89,5 @@ export class SpeechAnswerCardComponent implements OnChanges {
 
     filterWords(s: string) {
         return s.match(/(\w+)/g).pop();
-    }
-
-    checkAnswer(answer: string): boolean {
-        return this.question.answers.includes(answer);
     }
 }

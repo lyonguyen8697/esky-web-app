@@ -1,4 +1,4 @@
-import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnChanges, SimpleChanges, Input, Output, EventEmitter } from '@angular/core';
 
 import { Question } from '../../models/question.model';
 import { ArrangementService } from '../../services/arrangement.service';
@@ -12,7 +12,9 @@ export class ArrangementAnswerCardComponent implements OnChanges {
 
     @Input() question: Question;
 
-    @Output() answer = new EventEmitter<boolean>();
+    @Output() answer = new EventEmitter<string>();
+
+    @Input() isCorrect: boolean;
 
     answerFragments: string[];
 
@@ -20,26 +22,27 @@ export class ArrangementAnswerCardComponent implements OnChanges {
 
     submitted: boolean;
 
-    isCorrect: boolean;
+    resetFlag: boolean;
 
     constructor(private arrange: ArrangementService) { }
 
-    ngOnChanges() {
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.question || changes.isCorrect.currentValue === null) {
+            this.reset();
+        }
+    }
+
+    reset() {
         this.answerFragments = [];
         this.disableSubmit = true;
         this.submitted = false;
-        this.isCorrect = false;
+        this.resetFlag = false;
+        setTimeout(() => this.resetFlag = true, 100);
     }
 
     submit() {
         this.submitted = true;
-        if (this.checkAnswer(this.answerFragments)) {
-            this.isCorrect = true;
-            this.answer.emit(true);
-        } else {
-            this.isCorrect = false;
-            this.answer.emit(false);
-        }
+        this.answer.emit(this.answerFragments.join(';'));
     }
 
     append(selector: string) {
@@ -61,9 +64,5 @@ export class ArrangementAnswerCardComponent implements OnChanges {
         } else {
             this.disableSubmit = true;
         }
-    }
-
-    checkAnswer(answer: string[]): boolean {
-        return this.question.answers.every((value, index) => value === answer[index]);
     }
 }

@@ -10,6 +10,7 @@ import { LessonService } from '../../services/lesson.service';
 import { AudioService } from '../../services/audio.service';
 import { animation } from '../../animations/animation';
 import { slideInOut } from '../../animations/slide-in-out.animation';
+import { Learner } from '../../models/learner.model';
 import { Lesson } from '../../models/lesson.model';
 import { Question } from '../../models/question.model';
 import { AnswerType } from '../../enums/answer-type.enum';
@@ -19,15 +20,17 @@ import { AnswerType } from '../../enums/answer-type.enum';
     styleUrls: ['lesson.component.css'],
     animations: [
         animation,
-        slideInOut('200ms', false, '5%', 0)
+        slideInOut({ slideOut: false, timing: '200ms', translate: '15%'}),
+        slideInOut({ name: 'slideInOutDelay', slideOut: false, timing: '200ms 50ms', translate: '15%'})
     ]
 })
-
 export class LessonComponent implements OnInit {
 
     lesson: Lesson;
 
     questions: Question[];
+
+    experience: number;
 
     answerType = AnswerType;
 
@@ -35,13 +38,21 @@ export class LessonComponent implements OnInit {
 
     currentQuestion: Question;
 
+    isCorrect: boolean;
+
     progressValue = 0;
 
     nextQuestionDelaying = false;
 
     nextQuestionDelay = 1000;
 
-    constructor(private learnerService: LearnerService,
+    finished = false;
+
+    learner: Learner;
+
+    slideState: string;
+
+    constructor(public learnerService: LearnerService,
         private lessonService: LessonService,
         private audioService: AudioService,
         private route: ActivatedRoute) { }
@@ -51,13 +62,7 @@ export class LessonComponent implements OnInit {
     }
 
     canDeactivate() {
-        this.updateLessonProgress();
         return true;
-    }
-
-    updateLessonProgress() {
-        this.learnerService.updateLessonProgress(this.lesson.id, this.progressValue, this.getLessonRemains())
-        .subscribe();
     }
 
     getQuestions() {
@@ -66,7 +71,7 @@ export class LessonComponent implements OnInit {
             this.lesson = data.lesson.lesson;
             this.questions = data.lesson.questions;
             this.questionIndex = 0;
-            if (this.lesson.remains) {
+            if (this.lesson.remains.length > 0) {
                 this.arrangeQuestion();
                 this.questionIndex = this.questions.length - this.lesson.remains.length;
                 this.ajustProgressbar();
@@ -75,24 +80,29 @@ export class LessonComponent implements OnInit {
         });
     }
 
-    answer(event) {
+    answer(answer: string) {
         this.nextQuestionDelaying = true;
-        if (event) {
-            this.correctAnswer();
-        } else {
-           this.wrongAnswer();
-        }
-        setTimeout(() => this.nextQuestion(), this.nextQuestionDelay);
+        this.learnerService.answerQuestion(this.lesson.id, this.currentQuestion.id, answer)
+        .subscribe(result => {
+            if (result) {
+                this.correctAnswer();
+            } else {
+               this.wrongAnswer();
+            }
+            setTimeout(() => this.next(), this.nextQuestionDelay);
+        });
     }
 
     correctAnswer() {
         this.audioService.play(this.audioService.correct);
+        this.isCorrect = true;
         this.questionIndex++;
         this.ajustProgressbar();
     }
 
     wrongAnswer() {
         this.audioService.play(this.audioService.wrong);
+        this.isCorrect = false;
         const wrongQuestion = this.questions.splice(this.questionIndex, 1)[0];
         this.questions.push(wrongQuestion);
     }
@@ -100,14 +110,38 @@ export class LessonComponent implements OnInit {
     skipQuestion() {
         if (this.questionIndex < this.questions.length - 1 && !this.nextQuestionDelaying) {
             this.nextQuestionDelaying = true;
+            this.learnerService.answerQuestion(this.lesson.id, this.currentQuestion.id, '').subscribe();
             this.wrongAnswer();
             setTimeout(() => this.nextQuestion(), this.nextQuestionDelay);
         }
     }
 
+    next() {
+        if (this.questionIndex < this.questions.length) {
+            this.nextQuestion();
+        } else {
+            this.summary();
+        }
+    }
+
     nextQuestion() {
-        this.currentQuestion = this.questions[this.questionIndex];
         this.nextQuestionDelaying = false;
+        this.isCorrect = null;
+        this.currentQuestion = this.questions[this.questionIndex];
+        this.toggleAnimation();
+    }
+
+    summary() {
+        this.nextQuestionDelaying = false;
+        this.finished = true;
+        this.learnerService.get()
+        .subscribe(learner => {
+            this.learner = learner;
+        });
+        this.learnerService.getLessonReward(this.lesson.id)
+        .subscribe(experience => {
+            this.experience = experience;
+        });
     }
 
     ajustProgressbar() {
@@ -128,5 +162,10 @@ export class LessonComponent implements OnInit {
             remains.push(this.questions[i].id);
         }
         return remains;
+    }
+
+    toggleAnimation() {
+        this.slideState = 'void';
+        setTimeout(() => this.slideState = '*', 100);
     }
 }

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { EncryptService } from '../services/encrypt.service';
 import { RequestUtils } from '../utils/request.utils';
 import { SignUpInfo } from '../models/sign-up-info.model';
-import { User } from '../models/user.model';
+import { UserService } from './user.service';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -17,6 +17,7 @@ export class SignUpService {
 
     constructor(private http: Http,
         private router: Router,
+        private user: UserService,
         private encrypt: EncryptService) {}
 
     checkEmailExists(email: string): Observable<boolean> {
@@ -35,7 +36,7 @@ export class SignUpService {
     }
 
     signUpSucess(res) {
-        User.setLocal(res.json());
+        this.user.setLocal(res.json());
         this.router.navigate(['verify']);
     }
 

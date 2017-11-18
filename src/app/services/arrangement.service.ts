@@ -7,7 +7,7 @@ export class ArrangementService {
 
     getFragments(containerSelector: string): string[] {
         const fragments = $(containerSelector + '>.fragment:not(.hide)');
-        return fragments.map(e => fragments[e].innerText);
+        return fragments.map(e => fragments[e].innerText).toArray();
     }
 
     moveElementTo(

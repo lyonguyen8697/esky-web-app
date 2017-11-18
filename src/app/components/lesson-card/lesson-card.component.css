@@ -49,7 +49,7 @@ hr {
     color: gray;
 }
 .lesson-passed.passed {
-    color: #9c9c0c;
+    color: #ebeb33;
 }
 .subject-essential {
     background: #1ECDCE linear-gradient(to top left, #48a7d1 0%, #1ECDCE 100%);

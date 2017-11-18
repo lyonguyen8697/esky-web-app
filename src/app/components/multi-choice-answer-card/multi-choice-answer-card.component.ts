@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 
 import { Question } from '../../models/question.model';
 
@@ -11,24 +11,28 @@ export class MultiChoiceAnswerCardComponent implements OnChanges {
 
     @Input() question: Question;
 
-    @Output() answer = new EventEmitter<boolean>();
+    @Output() answer = new EventEmitter<string>();
 
-    chooser: string;
+    @Input() isCorrect: boolean;
 
-    ngOnChanges() {
-        this.chooser = null;
-    }
+    currentChoice: string;
 
-    submit(choiceIndex: string) {
-        this.chooser = choiceIndex;
-        if (this.checkAnswer(this.chooser)) {
-            this.answer.emit(true);
-        } else {
-            this.answer.emit(false);
+    submitted: boolean;
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.question || changes.isCorrect.currentValue === null) {
+            this.reset();
         }
     }
 
-    checkAnswer(answer: string): boolean {
-        return this.question.answers.includes(answer);
+    reset() {
+        this.currentChoice = null;
+        this.submitted = false;
+    }
+
+    submit(choice: string) {
+        this.currentChoice = choice;
+        this.submitted = true;
+        this.answer.emit(choice);
     }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 
 import { Question } from '../../models/question.model';
 
@@ -11,18 +11,20 @@ export class TypingAnswerCardComponent implements OnChanges {
 
     @Input() question: Question;
 
-    @Output() answer = new EventEmitter<boolean>();
+    @Input() isCorrect: boolean;
+
+    @Output() answer = new EventEmitter<string>();
 
     value: string;
-
-    isCorrect: boolean;
 
     submitted: boolean;
 
     disableSubmit: boolean;
 
-    ngOnChanges() {
-        this.reset();
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.question || changes.isCorrect.currentValue === null) {
+            this.reset();
+        }
     }
 
     reset() {
@@ -44,16 +46,6 @@ export class TypingAnswerCardComponent implements OnChanges {
         if (event) {
             event.preventDefault();
         }
-        if (this.checkAnswer(this.value)) {
-            this.isCorrect = true;
-            this.answer.emit(true);
-        } else {
-            this.isCorrect = false;
-            this.answer.emit(false);
-        }
-    }
-
-    checkAnswer(answer: string): boolean {
-        return this.question.answers.includes(answer);
+        this.answer.emit(this.value);
     }
 }

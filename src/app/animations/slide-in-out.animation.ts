@@ -10,26 +10,28 @@ import {
     keyframes
  } from '@angular/animations';
 
-export function slideInOut(timing: string = '200ms', translateX = true, translate = '20%', opacity = 0): AnimationTriggerMetadata  {
-    if (translateX) {
-        return trigger('slideInOut', [
-            transition(':enter', [
-                style({ transform: 'translateX(' + translate + ')', opacity: opacity}),
-                animate(timing)
-            ]),
-            transition(':leave', [
-                animate(timing, style({ transform: 'translateX(-' + translate + ')', opacity: opacity}))
-            ])
-        ]);
-    } else {
-        return trigger('slideInOut', [
-            transition(':enter', [
-                style({ transform: 'translateY(' + translate + ')', opacity: opacity}),
-                animate(timing)
-            ]),
-            transition(':leave', [
-                animate(timing, style({ transform: 'translateY(-' + translate + ')', opacity: opacity}))
-            ])
-        ]);
+export function slideInOut({
+    name = 'slideInOut',
+    stateIn = '*',
+    stateOut = 'void',
+    slideIn = true,
+    slideOut = true,
+    timing = '200ms',
+    translateX = false,
+    translate = '20%',
+    opacity = 0
+}): AnimationTriggerMetadata  {
+    const transitions: any = [
+        state(stateOut, style({
+            transform: translateX ? 'translateX(' : 'translateY(' + translate + ')',
+            opacity: opacity
+        }))
+    ];
+    if (slideIn) {
+        transitions.push(transition(stateOut + ' => ' + stateIn, animate(timing)));
     }
+    if (slideOut) {
+        transitions.push(transition(stateIn + ' => ' + stateOut, animate(timing)));
+    }
+    return trigger(name, transitions);
 }

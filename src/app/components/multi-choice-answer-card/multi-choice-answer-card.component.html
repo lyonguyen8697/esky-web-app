@@ -4,13 +4,13 @@
             <div *ngFor="let choice of question.choices; let i = index" class="col-md-6">
                 <button type="button" class="btn btn-outline-info btn-block btn-lg"
                 (click)="submit(i.toString())" 
-                [class.btn-correct]="chooser ? isCorrect(i.toString()) : false"
-                [class.btn-wrong]="chooser ? !isCorrect(i.toString()) : false"
-                [class.btn-focus]="i.toString() === chooser">
+                [class.btn-correct]="isCorrect && i == currentChoice && submitted"
+                [class.btn-wrong]="!isCorrect && submitted"
+                [class.btn-focus]="i == currentChoice && submitted">
                     {{choice}}
                 </button>
             </div>
         </div>
-        <div [class.blocker]="chooser"></div>
+        <div [class.blocker]="submitted"></div>
     </div>
 </div>

@@ -18,7 +18,7 @@
                 <i class="fa fa-graduation-cap" aria-hidden="true"></i>
             </div>
             <div class="lesson-star">
-                25
+                {{lesson.experience}}
                 <i class="fa fa-star" aria-hidden="true"></i>
             </div>
             <div class="lesson-passed" [class.passed]="lesson.passed">
@@ -26,6 +26,5 @@
             </div>
         </div>
         <app-progressbar [value]="lesson.progress" [height]="'5px'" [backgroundClass]="'bg-warning'"></app-progressbar>
-        <!-- <i class="fa fa-trophy" aria-hidden="true"></i> -->
     </div>
 </div>

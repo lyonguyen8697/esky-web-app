@@ -5,7 +5,8 @@ export interface Lesson {
     caption: string;
     description: string;
     level: string;
-    progress: number;
+    answered: string[];
     remains: string[];
+    experience: number;
     passed: boolean;
 }

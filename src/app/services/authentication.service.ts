@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { EncryptService } from '../services/encrypt.service';
 import { RequestUtils } from '../utils/request.utils';
 import { Credentials } from '../models/credentials.models';
-import { User } from '../models/user.model';
+import { UserService } from './user.service';
 import { Role } from '../enums/role.emum';
 
 import 'rxjs/add/operator/map';
@@ -20,6 +20,7 @@ export class AuthenticationService {
 
     constructor(private http: Http,
         private router: Router,
+        private user: UserService,
         private encryt: EncryptService) { }
 
     signIn(credential: Credentials, error: string) {
@@ -34,19 +35,24 @@ export class AuthenticationService {
     }
 
     signInSuccess(res) {
-        User.setLocal(res.json());
-        if (User.getLocal().token) {
-            if (this.redirectUrl) {
-                this.router.navigate([this.redirectUrl]);
-            } else {
-                this.router.navigate(['']);
-            }
+        this.user.setLocal(res.json());
+        if (this.checkVerify()) {
+            this.redirect();
         } else {
             this.router.navigate(['verify']);
         }
     }
+
     signInError(res, error: string) {
         error = res.json().message;
+    }
+
+    redirect() {
+        if (this.redirectUrl) {
+            this.router.navigate([this.redirectUrl]);
+        } else {
+            this.router.navigate(['']);
+        }
     }
 
     encryptInfo(credential: Credentials) {
@@ -54,21 +60,26 @@ export class AuthenticationService {
     }
 
     signOut() {
-        User.removeLocal();
+        this.user.removeLocal();
         this.redirectUrl = null;
         this.router.navigate(['welcome']);
     }
 
+    requireSignIn(redirectUrl: string) {
+        this.redirectUrl = redirectUrl;
+        this.router.navigate(['welcome']);
+    }
+
     checkCredentials(): boolean {
-        return User.getLocal() ? true : false;
+        return this.user.getLocal() ? true : false;
     }
 
     checkVerify(): boolean {
-        return this.checkCredentials() ? User.getLocal().token != null : false;
+        return this.checkCredentials() ? this.user.getToken() != null : false;
     }
 
     userInRole(role: Role): boolean {
-        const userRole: Role = Role[User.getLocal().role];
+        const userRole: Role = Role[this.user.getLocal().role];
         return userRole >= role;
     }
 

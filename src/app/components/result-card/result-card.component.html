@@ -1,0 +1,39 @@
+<div class="card card-shadow">
+    <div class="card-body text-center p-4">
+        <div class="d-flex justify-content-center">
+            <img src="assets/icons/confetti.png" width="32" height="32" alt="confetti" aria-hidden="true">
+            <h3 class="card-title mx-2">
+                Chúc mừng bạn
+            </h3>
+            <img src="assets/icons/confetti.png" width="32" height="32" alt="confetti" aria-hidden="true">
+        </div>
+        <div class="d-flex justify-content-center m-md-3 my-3">
+            <div class="experience-bonus my-auto">
+                <div @slideInOut>
+                    +{{experienceBonus}}
+                    <img src="assets/icons/star.png" width="32" height="32" alt="star" aria-hidden="true">
+                </div>
+            </div>
+            <div class="level-circle d-inline-block mx-2">
+                <div class="level d-flex w-100 h-100 justify-content-center align-items-center m-auto">
+                    <span>
+                        {{level}}
+                    </span>
+                </div>
+            </div>
+            <div class="cup">
+
+            </div>
+        </div>
+        <div class="result-buttons mt-4 mx-auto d-flex justify-content-center">
+            <button type="button" class="btn-refresh btn btn-warning mx-1">
+                <i class="fa fa-refresh pr-sm-1" aria-hidden="true"></i>
+                <span class="d-none d-md-inline">Làm lại</span>
+            </button>
+            <button type="button" class="btn-continue btn btn-primary mx-1" (click)="continue()">
+                Tiếp tục
+            </button>
+            <div class="btn-placer mx-1"></div>
+        </div>
+    </div>
+</div>

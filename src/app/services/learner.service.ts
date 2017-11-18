@@ -9,6 +9,8 @@ import { User } from '../models/user.model';
 import { Role } from '../enums/role.emum';
 import { Lesson } from '../models/lesson.model';
 import { Question } from '../models/question.model';
+import { Learner } from '../models/learner.model';
+import { LevelInfo } from '../models/level-info.model';
 
 import 'rxjs/add/operator/map';
 
@@ -18,6 +20,23 @@ export class LearnerService {
     apiUrl = '/api/learners';
 
     constructor(private authHttp: AuthenticationHttp) { }
+
+    get(): Observable<Learner> {
+        return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl))
+        .map(res => res.json())
+        .mergeMap(res => {
+            const learner = new Learner(res);
+            return this.getLevelInfo().map((levelInfo: LevelInfo) => {
+                learner.levelInfo = levelInfo;
+                return learner;
+            });
+        });
+    }
+
+    getLevelInfo(): Observable<LevelInfo> {
+        return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl + '/levelinfo'))
+        .map(res => res.json());
+    }
 
     getLessons(): Observable<Lesson[]> {
         return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl + '/lessons'))
@@ -29,8 +48,14 @@ export class LearnerService {
         .map(res => res.json());
     }
 
-    updateLessonProgress(lessonId: string, progress: number, remains: string[]): Observable<any> {
-        return this.authHttp.put(RequestUtils.getFullUrl(this.apiUrl + '/lessons/' + lessonId), { progress: progress, remains: remains });
+    answerQuestion(lessonId: string, questionId: string, answer: string): Observable<boolean> {
+        return this.authHttp.put(RequestUtils.getFullUrl(this.apiUrl + '/lessons/' + lessonId + '/questions/' + questionId), answer)
+        .map(res => res.json().result);
+    }
+
+    getLessonReward(lessonId): Observable<number> {
+        return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl + '/lessons/' + lessonId + '/reward'))
+        .map(res => res.json().experience);
     }
 
     test(): Observable<string> {
