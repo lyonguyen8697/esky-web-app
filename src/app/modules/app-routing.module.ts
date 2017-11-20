@@ -15,10 +15,6 @@ const appRoutes: Routes = [
     {
         path: '404',
         component: PageNotFoundComponent
-    },
-    {
-        path: '**',
-        redirectTo: '404'
     }
 ];
 

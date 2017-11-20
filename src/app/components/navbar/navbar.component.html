@@ -21,12 +21,12 @@
                                     alt="Avatar" width="32" height="32">
                             </span>
                             <span class="m-auto pl-1 pr-2">
-                                {{user.name}}
+                                {{user?.name}}
                             </span>
                         </div>
                         <div class="user-menu bg-light rounded-bottom">
                             <div class="my-2">
-                                <a class="nav-btn d-block px-3 py-2">
+                                <a (click)="gotoUserInfo()" class="nav-btn d-block px-3 py-2">
                                     <i class="fa fa-user-circle" aria-hidden="true"></i>
                                     <span class="px-2">Thông tin cá nhân</span>
                                 </a>

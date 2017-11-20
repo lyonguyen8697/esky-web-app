@@ -6,6 +6,7 @@ import { HttpModule, BrowserXhr } from '@angular/http';
 import { AppRoutingModule } from './modules/app-routing.module';
 import { AuthenticationModule } from './modules/authentication.module';
 import { WelcomeModule } from './modules/welcome.module';
+import { UserModule } from './modules/user.module';
 import { VerifyModule } from './modules/verify.module';
 import { HomeModule } from './modules/home.module';
 import { StudyModule } from './modules/study.module';
@@ -34,6 +35,7 @@ import { ClickOutsideDirective } from './directives/click-outside.directive';
     HomeModule,
     StudyModule,
     AppRoutingModule,
+    UserModule,
     AuthenticationModule
   ],
   providers: [

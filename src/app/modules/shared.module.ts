@@ -6,6 +6,7 @@ import { SpinnerComponentModule } from 'ng2-component-spinner';
 import { TooltipComponent } from '../components/tooltip/tooltip.component';
 import { ProgressbarComponent } from '../components/progressbar/progressbar.component';
 
+import { LocalStorageService } from '../services/local-storage.service';
 import { UserService } from '../services/user.service';
 import { LearnerService } from '../services/learner.service';
 import { EncryptService } from '../services/encrypt.service';
@@ -27,6 +28,7 @@ import { TooltipService } from '../services/tooltip.service';
         ProgressbarComponent
     ],
     providers: [
+        LocalStorageService,
         UserService,
         TooltipService,
         LearnerService,

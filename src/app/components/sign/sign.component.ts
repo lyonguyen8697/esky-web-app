@@ -9,9 +9,11 @@ import {
  } from '@angular/animations';
  import { Router } from '@angular/router';
 
+ declare var $: any;
+
 import { AuthenticationService } from '../../services/authentication.service';
-import { SignUpService } from '../../services/sign-up.service';
-import { SignUpValidatorService } from '../../services/sign-up-validator.service';
+import { UserService } from '../../services/user.service';
+import { ValidatorService } from '../../services/validator.service';
 import { User } from '../../models/user.model';
 import { TooltipService } from '../../services/tooltip.service';
 import { rotateInOut } from '../../animations/rotate-in-out.animation';
@@ -78,12 +80,13 @@ export class SignComponent {
 
     constructor(private router: Router,
         private authService: AuthenticationService,
-        private signUpService: SignUpService,
-        private validator: SignUpValidatorService,
+        private user: UserService,
+        private validator: ValidatorService,
         private tooltip: TooltipService) { }
 
     submit() {
         this.submitted = true;
+        this.hideServerError();
         if (this.isSignUp) {
             this.signUp();
         } else {
@@ -93,20 +96,29 @@ export class SignComponent {
 
     signUp() {
         if (this.info.validated) {
-            this.signUpService.signUp(this.info, this.serverError);
+            this.user.signUp(this.info, error => this.onError(error));
         } else {
             this.validateAll();
             this.showAllTooltip(this.tooltipDelay);
+            this.submitted = false;
         }
     }
 
     signIn() {
         this.authService.signIn({ email: this.info.email, password: this.info.password },
-            this.serverError);
+            error => this.onError(error));
+    }
+
+    onError(message: string) {
+        this.submitted = false;
+        this.serverError = message;
+        this.showServerError();
     }
 
     validateAll() {
-        this.validator.validate(this.info).subscribe();
+        this.validator.validate(this.info).then(res => {
+            console.log(res);
+        });
     }
 
     validate(validate: Function, index: number) {
@@ -155,6 +167,7 @@ export class SignComponent {
     toggle(isCollapsing: boolean) {
         if (!isCollapsing) {
             this.toggleSign();
+            this.hideServerError();
         }
     }
 
@@ -179,5 +192,13 @@ export class SignComponent {
 
     toggleAllTooltip(delay = 0) {
         this.tooltip.toggle('.tooltip-container:not(.d-none) a', delay);
+    }
+
+    showServerError() {
+        $('.error-message').collapse('show');
+    }
+
+    hideServerError() {
+        $('.error-message').collapse('hide');
     }
 }

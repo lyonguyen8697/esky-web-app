@@ -7,8 +7,7 @@ import { SharedModule } from './shared.module';
 import { WelcomePageComponent } from '../components/welcome-page/welcome-page.component';
 import { SignComponent } from '../components/sign/sign.component';
 
-import { SignUpService } from '../services/sign-up.service';
-import { SignUpValidatorService } from '../services/sign-up-validator.service';
+import { ValidatorService } from '../services/validator.service';
 import { EncryptService } from '../services/encrypt.service';
 
 @NgModule({
@@ -20,8 +19,7 @@ import { EncryptService } from '../services/encrypt.service';
         SharedModule
     ],
     providers: [
-        SignUpService,
-        SignUpValidatorService,
+        ValidatorService,
         EncryptService
     ]
 })

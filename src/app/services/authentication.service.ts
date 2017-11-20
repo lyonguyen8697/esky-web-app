@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { EncryptService } from '../services/encrypt.service';
 import { RequestUtils } from '../utils/request.utils';
 import { Credentials } from '../models/credentials.models';
-import { UserService } from './user.service';
+import { LocalStorageService } from './local-storage.service';
 import { Role } from '../enums/role.emum';
 
 import 'rxjs/add/operator/map';
@@ -20,22 +20,22 @@ export class AuthenticationService {
 
     constructor(private http: Http,
         private router: Router,
-        private user: UserService,
+        private storage: LocalStorageService,
         private encryt: EncryptService) { }
 
-    signIn(credential: Credentials, error: string) {
+    signIn(credential: Credentials, handler?: Function) {
         this.encryptInfo(credential);
         this.http.post(RequestUtils.getFullUrl(this.apiUrl),
             JSON.stringify(credential),
             { headers: RequestUtils.getHeaders()})
             .subscribe(
                 res => this.signInSuccess(res),
-                res => this.signInError(res, error)
+                res => this.signInError(res, handler)
             );
     }
 
     signInSuccess(res) {
-        this.user.setLocal(res.json());
+        this.storage.setUser(res.json());
         if (this.checkVerify()) {
             this.redirect();
         } else {
@@ -43,8 +43,8 @@ export class AuthenticationService {
         }
     }
 
-    signInError(res, error: string) {
-        error = res.json().message;
+    signInError(res, handler?: Function) {
+        handler(res.json().message);
     }
 
     redirect() {
@@ -60,7 +60,7 @@ export class AuthenticationService {
     }
 
     signOut() {
-        this.user.removeLocal();
+        this.storage.removeUser();
         this.redirectUrl = null;
         this.router.navigate(['welcome']);
     }
@@ -71,15 +71,15 @@ export class AuthenticationService {
     }
 
     checkCredentials(): boolean {
-        return this.user.getLocal() ? true : false;
+        return this.storage.getUser() ? true : false;
     }
 
     checkVerify(): boolean {
-        return this.checkCredentials() ? this.user.getToken() != null : false;
+        return this.checkCredentials() ? this.storage.getUserToken() != null : false;
     }
 
     userInRole(role: Role): boolean {
-        const userRole: Role = Role[this.user.getLocal().role];
+        const userRole: Role = Role[this.storage.getUser().role];
         return userRole >= role;
     }
 

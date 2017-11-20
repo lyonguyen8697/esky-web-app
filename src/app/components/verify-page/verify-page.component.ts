@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { UserService } from '../../services/user.service';
+import { LocalStorageService } from '../../services/local-storage.service';
 import { User } from '../../models/user.model';
 
 import 'rxjs/add/operator/switchMap';
@@ -20,7 +20,7 @@ export class VerifyPageComponent implements OnInit {
 
     constructor(private router: Router,
         private route: ActivatedRoute,
-        private userService: UserService) { }
+        private storage: LocalStorageService) { }
 
     ngOnInit() {
         this.route.data
@@ -29,13 +29,13 @@ export class VerifyPageComponent implements OnInit {
                 console.log(data);
                 if (!data.response) {
                     this.verifyCase = 0;
-                    this.user = this.userService.getLocal();
+                    this.user = this.storage.getUser();
                     if (!this.user) {
                         this.router.navigate(['welcome']);
                     }
                 } else if (data.response.jwt) {
                     this.verifyCase = 1;
-                    this.userService.setToken(data.response.jwt);
+                    this.storage.setUserToken(data.response.jwt);
                 } else {
                     this.verifyCase = 2;
                 }

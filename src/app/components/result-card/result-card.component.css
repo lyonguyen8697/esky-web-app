@@ -7,6 +7,8 @@
 }
 .level-circle {
     position: relative;
+    height: 120px;
+    
 }
 .level {
     position: absolute;

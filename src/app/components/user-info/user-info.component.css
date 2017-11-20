@@ -1,0 +1,25 @@
+.user-name {
+    font-size: 1.5rem;
+}
+.user-role {
+    font-size: 1.1rem;
+}
+@media (min-width: 576px) {
+    .user-name {
+        font-size: 2rem;
+    }
+    .user-role {
+        font-size: 1.5rem;
+    }
+}
+.form-group {
+    position: relative;
+}
+.form-group input {
+    padding-right: 38px;
+}
+.tooltip-container {
+    position: absolute;
+    top: 11px;
+    right: 26px;
+}
