@@ -1,13 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, AbstractControl, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
+
+import { Observable } from 'rxjs/Observable';
+import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
+import 'rxjs/add/operator/debounceTime';
 
 import { UserService } from '../../services/user.service';
 import { ValidatorService } from '../../services/validator.service';
+import { ModalService } from '../../services/modal.service';
 import { TooltipService } from '../../services/tooltip.service';
 import { User } from '../../models/user.model';
-import { UserUpdateInfo } from '../../models/user-update-info.model';
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
 declare var $: any;
 
@@ -18,114 +22,159 @@ declare var $: any;
 })
 export class UserInfoComponent implements OnInit {
 
-    user: User;
+    form: FormGroup;
 
-    info = new UserUpdateInfo;
+    user: User;
 
     editable: boolean;
 
     editing = false;
 
-    infoChanged = false;
-
-    passwordChanged = false;
-
     updateCount = 0;
 
     submitted = false;
 
-    serverError = '';
+    serverError: string;
 
-    passwordValidate = '';
+    hideInvalid = false;
 
-    timeoutId = new Array<number>();
-
-    validateDelay = 500;
+    hideInvalidDelay = 500;
 
     tooltipDelay = 50;
 
+    modalName = 'confirmPasswordModal';
+
+    keydown = new EventEmitter<string>();
+
+    get username() {
+        return this.form.get('username');
+    }
+
+    get name() {
+        return this.form.get('name');
+    }
+
+    get password() {
+        return this.form.get('password');
+    }
+
+    get credentials() {
+        return this.form.get('credentials');
+    }
+
+    get isUsernameChange(): boolean {
+        return this.username.value !== this.user.username;
+    }
+
+    get isNameChange(): boolean {
+        return this.name.value.trim() !== this.user.name.trim();
+    }
+
+    get isPasswordChange(): boolean {
+        return this.password.dirty;
+    }
+
+    get isFormChanges(): boolean {
+        return this.isUsernameChange || this.isNameChange || this.isPasswordChange;
+    }
+
     constructor(private route: ActivatedRoute,
+                private fb: FormBuilder,
                 private location: Location,
                 private userService: UserService,
                 private validator: ValidatorService,
+                private modal: ModalService,
                 private tooltip: TooltipService) { }
 
     ngOnInit() {
         this.editable = true;
+        this.editing = false;
         this.route.data
         .subscribe(data => {
             this.user = data.user;
-            this.resetInfo();
+            this.createForm();
+            this.registerKeydown();
         });
     }
 
+    resetForm() {
+        this.form.reset({
+            username: this.user.username,
+            name: this.user.name,
+            password: '******',
+            credentials: ''
+        });
+    }
+
+    registerKeydown() {
+        Object.keys(this.form.controls)
+        .forEach(key => {
+            const control = this.form.get(key);
+            control.valueChanges
+            .subscribe(() => {
+                control.markAsPristine();
+            });
+        });
+        this.keydown
+        .do(() => this.hideAllTooltip())
+        .debounceTime(this.hideInvalidDelay)
+        .subscribe(key => {
+            const control = this.form.get(key);
+            control.markAsDirty();
+            this.showTooltip(key, this.tooltipDelay);
+        });
+    }
+
+    onKeydown(control: string) {
+        this.keydown.emit(control);
+    }
+
     submit() {
-        if (this.info.username.toLowerCase() !== this.user.username.toLowerCase()) {
+        if (this.isUsernameChange) {
             this.updateCount++;
-            this.userService.updateUsername(this.info)
-            .subscribe(error => this.updateUsernameComplete(error));
+            this.userService.updateUsername(this.username.value, this.credentials.value)
+            .finally(this.updateComplete.bind(this))
+            .subscribe({error: error => this.updateError(error, this.username)});
         }
-        if (this.info.name !== this.user.name) {
+        if (this.isNameChange) {
             this.updateCount++;
-            this.userService.updateName(this.info)
-            .subscribe(error => this.updateNameComplete(error));
+            this.userService.updateName(this.name.value, this.credentials.value)
+            .finally(this.updateComplete.bind(this))
+            .subscribe({error: error => this.updateError(error, this.name)});
         }
-        if (this.passwordChanged) {
+        if (this.isPasswordChange) {
             this.updateCount++;
-            this.userService.updatePassword(this.info)
-            .subscribe(error => this.updatePasswordComplete(error));
+            this.userService.updatePassword(this.password.value, this.credentials.value)
+            .finally(this.updateComplete.bind(this))
+            .subscribe({error: error => this.updateError(error, this.password)});
         }
         this.submitted = true;
         this.serverError = '';
     }
 
-    updateUsernameComplete(error) {
-        if (error.status !== 200) {
-            if (error.code = 16) {
-                this.serverError = 'Sai mật khẩu';
-                this.submitted = false;
-                this.updateCount--;
-                return;
-            }
-            this.info.usernameError = true;
+    updateError(error: any, control: AbstractControl) {
+        error = error.json();
+        if (error.code === 16) {
+            this.serverError = 'Sai mật khẩu';
+        } else {
+            control.setErrors({ 'server': 'error'});
         }
-        this.updateComplete();
-    }
-
-    updateNameComplete(error) {
-        if (error.status !== 200) {
-            if (error.code = 16) {
-                this.serverError = 'Sai mật khẩu';
-                this.submitted = false;
-                this.updateCount--;
-                return;
-            }
-            this.info.nameError = true;
-        }
-        this.updateComplete();
-    }
-
-    updatePasswordComplete(error) {
-        if (error.status !== 200) {
-            if (error.code = 16) {
-                this.serverError = 'Sai mật khẩu';
-                this.submitted = false;
-                this.updateCount--;
-                return;
-            }
-            this.info.passwordError = true;
-        }
-        this.updateComplete();
     }
 
     updateComplete() {
         this.updateCount--;
-        if (this.updateCount === 0 && this.submitted) {
-            $('#confirmPasswordModal').modal('hide');
-            this.submitted = false;
-            if (this.info.validated) {
-                this.updateSuccess();
-            }
+        if (this.updateCount !== 0) {
+            return;
+        }
+        this.submitted = false;
+        if (this.serverError) {
+            return;
+        }
+        this.hideModal();
+        if (this.form.valid) {
+            this.updateSuccess();
+        } else {
+            this.showAllTooltip();
         }
     }
 
@@ -142,107 +191,103 @@ export class UserInfoComponent implements OnInit {
         this.location.replaceState(this.user.username);
     }
 
-    save() {
-        this.validateAll(() => {
-            if (this.info.validated) {
-                $('#confirmPasswordModal').modal();
-            } else {
-                this.showAllTooltip(this.tooltipDelay);
-            }
-        });
-    }
-
     edit() {
         this.editing = true;
+        this.enableForm();
     }
 
     cancelEdit() {
         this.editing = false;
-        this.passwordChanged = false;
-        this.infoChanged = false;
-        this.resetInfo();
+        this.disableForm();
+        this.resetForm();
         this.hideAllTooltip();
     }
 
-    resetInfo() {
-        this.info.reset();
-        this.info.currentUsername = this.user.username;
-        this.info.username = this.user.username;
-        this.info.name = this.user.name;
-        this.info.password = '********';
+    save() {
+        this.credentials.enable();
+        this.showModal();
     }
 
-    validateAll(handler?: Function) {
-        this.validator.validate(this.info).then(() => {
-            if (handler) {
-                handler();
-            }
-        });
+    modalHided() {
+        this.credentials.disable();
+        this.credentials.setValue('');
+
     }
 
-    validate(validate: Function, index: number) {
-        clearTimeout(this.timeoutId[index]);
-        this.timeoutId[index] = window.setTimeout(() => validate(), this.validateDelay);
+    enableForm() {
+        this.username.enable();
+        this.name.enable();
+        this.password.enable();
     }
 
-    onUsernameChange() {
-        this.tooltip.hide('.tooltip-username a');
-        this.info.usernameError = null;
-        this.validate(() => {
-            this.validator.username(this.info)
-            .subscribe(() => {
-                this.tooltip.show('.tooltip-username a', this.tooltipDelay);
-                this.detectChanges();
-            });
-        }, 0);
+    disableForm() {
+        this.username.disable();
+        this.name.disable();
+        this.password.disable();
     }
 
-    onNameChange() {
-        this.tooltip.hide('.tooltip-name a');
-        this.info.nameError = null;
-        this.validate(() => {
-            this.validator.name(this.info);
-            this.tooltip.show('.tooltip-name a', this.tooltipDelay);
-            this.detectChanges();
-        }, 1);
+    showModal() {
+        this.modal.show(this.modalName);
     }
 
-    onPasswordChange() {
-        if (this.editing) {
-            this.tooltip.hide('.tooltip-password a');
-            this.info.passwordError = null;
-            this.validate(() => {
-                this.validator.password(this.info);
-                this.tooltip.show('.tooltip-password a', this.tooltipDelay);
-                this.detectChanges();
-            }, 2);
-        }
+    hideModal() {
+        this.modal.hide(this.modalName);
     }
 
-    onFocusPassword() {
-        if (!this.passwordChanged && this.editing) {
-            this.passwordChanged = true;
-            this.info.password = '';
-        }
+    showTooltip(name: string, delay = 0) {
+        this.tooltip.show(`.tooltip-${name} a`, delay);
     }
 
-    detectChanges() {
-        this.infoChanged = this.info.username.toLowerCase() !== this.user.username.toLowerCase()
-                            || this.info.name !== this.user.name
-                            || this.passwordChanged;
+    hideTooltip(name: string, delay = 0) {
+        this.tooltip.hide(`.tooltip-${name} a`, delay);
     }
 
     showAllTooltip(delay = 0) {
-        this.tooltip.show('.tooltip-container a', delay);
+        this.tooltip.show('.tooltip-wrap a', delay);
     }
 
     hideAllTooltip(delay = 0) {
-        this.tooltip.hide('.tooltip-container a', delay);
+        this.tooltip.hide('.tooltip-wrap a', delay);
     }
 
     toggleAllTooltip(delay = 0) {
-        this.tooltip.toggle('.tooltip-container a', delay);
+        this.tooltip.toggle('.tooltip-wrap a', delay);
     }
 
+    createForm() {
+        this.form = this.fb.group({
+            username: this.fb.control(
+                { value: this.user.username, disabled: true},
+                Validators.compose([Validators.required, Validators.pattern(this.validator.usernameRegex)]),
+                this.validator.usernameExists(this.hideInvalidDelay, this.user.username)
+            ),
+            name: this.fb.control(
+                { value: this.user.name, disabled: true},
+                Validators.required
+            ),
+            password: this.fb.control(
+                { value: '******', disabled: true},
+                Validators.compose([Validators.required, Validators.minLength(6)])
+            ),
+            credentials: this.fb.control(
+                { value: '', disabled: true},
+                Validators.required
+            )
+        });
+    }
+
+    isInvalid(control: AbstractControl): boolean {
+        return control.invalid && control.dirty && this.editing;
+    }
+
+    getErrorMessage(name: string, control: AbstractControl): string {
+        return this.validator.getErrorMessage(name, control);
+    }
+
+    onPasswordFocus() {
+        if (this.password.pristine) {
+            this.password.setValue('');
+        }
+    }
 
 }

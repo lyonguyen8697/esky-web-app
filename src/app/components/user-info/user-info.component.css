@@ -18,8 +18,8 @@
 .form-group input {
     padding-right: 38px;
 }
-.tooltip-container {
+.tooltip-wrap {
     position: absolute;
     top: 11px;
-    right: 26px;
+    right: 11px;
 }

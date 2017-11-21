@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AbstractControl, AsyncValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 
 import { UserService } from './user.service';
@@ -123,6 +124,43 @@ export class ValidatorService {
             info.confirmPassError = false;
             info.confirmPassErrorMess = '';
             return true;
+        }
+    }
+
+    usernameExists(debounceTime: number, except?: string): AsyncValidatorFn {
+        return (control: AbstractControl): Observable<{[key: string]: any}> => {
+            if (except && except.trim().toLowerCase() === control.value.trim().toLowerCase()) {
+                return Observable.of(null);
+            }
+            return this.user.hasEmailOrUsername(control.value)
+            .debounceTime(debounceTime)
+            .map(exists => exists ? {'exists': {value: control.value}} : null);
+        };
+    }
+
+    emailExists(debounceTime: number, except?: string): AsyncValidatorFn {
+        return (control: AbstractControl): Observable<{[key: string]: any}> => {
+            if (except && except.trim().toLowerCase() === control.value.trim().toLowerCase()) {
+                return Observable.of(null);
+            }
+            return this.user.hasEmailOrUsername(control.value)
+            .debounceTime(debounceTime)
+            .map(exists => exists ? {'exists': {value: control.value}} : null);
+        };
+    }
+
+    getErrorMessage(name: string, control: AbstractControl) {
+        if (control.hasError('required')) {
+            return name + ' của bạn là gì?';
+        }
+        if (control.hasError('minlength')) {
+            return name + ' của bạn phải có tối thiểu 6 ký tự';
+        }
+        if (control.hasError('exists')) {
+            return name + ' của bạn đã tồn tại';
+        }
+        if (control.hasError('server')) {
+            return `Lỗi vui lòng nhập hợp ${name} lệ`;
         }
     }
 }

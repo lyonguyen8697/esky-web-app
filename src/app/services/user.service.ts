@@ -3,6 +3,7 @@ import { Http } from '@angular/http';
 import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/mapTo';
 
 import { AuthenticationHttp } from './authentication-http.service';
 import { LocalStorageService } from './local-storage.service';
@@ -39,7 +40,7 @@ export class UserService {
 
     hasEmailOrUsername(emailOrUsername: string): Observable<boolean> {
         return this.http.head(RequestUtils.getFullUrl('api/accounts/' + emailOrUsername))
-        .map(() => true)
+        .mapTo(true)
         .catch(() => Observable.of(false));
     }
 
@@ -62,26 +63,23 @@ export class UserService {
         handler(res.json().message);
     }
 
-    updateUsername(info: UserUpdateInfo): Observable<any> {
-        const encryptInfo = info.prime;
-        encryptInfo.credentials = this.encrypt.encryptPassword(info.credentials);
-        return this.authHttp.put(RequestUtils.getFullUrl(this.apiUrl + '/username'), encryptInfo)
-        .catch(error => Observable.of(error.json()));
+    updateUsername(username: string, credentials: string): Observable<any> {
+        credentials = this.encrypt.encryptPassword(credentials);
+        return this.authHttp
+        .put(RequestUtils.getFullUrl(this.apiUrl + '/username'), { username: username, credentials: credentials});
     }
 
-    updateName(info: UserUpdateInfo): Observable<any> {
-        const encryptInfo = info.prime;
-        encryptInfo.credentials = this.encrypt.encryptPassword(info.credentials);
-        return this.authHttp.put(RequestUtils.getFullUrl(this.apiUrl + '/name'), encryptInfo)
-        .catch(error => Observable.of(error.json()));
+    updateName(name: string, credentials: string): Observable<any> {
+        credentials = this.encrypt.encryptPassword(credentials);
+        return this.authHttp
+        .put(RequestUtils.getFullUrl(this.apiUrl + '/name'), { name: name, credentials: credentials});
     }
 
-    updatePassword(info: UserUpdateInfo): Observable<any> {
-        const encryptInfo = info.prime;
-        encryptInfo.credentials = this.encrypt.encryptPassword(info.credentials);
-        encryptInfo.password = this.encrypt.encryptPassword(info.password);
-        return this.authHttp.put(RequestUtils.getFullUrl(this.apiUrl + '/password'), encryptInfo)
-        .catch(error => Observable.of(error.json()));
+    updatePassword(password: string, credentials: string): Observable<any> {
+        password = this.encrypt.encryptPassword(password);
+        credentials = this.encrypt.encryptPassword(credentials);
+        return this.authHttp
+        .put(RequestUtils.getFullUrl(this.apiUrl + '/password'), { password: password, credentials: credentials});
     }
 
 }
