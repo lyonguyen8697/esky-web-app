@@ -6,7 +6,7 @@
                 class="fragment hide rounded text-center p-1 ml-1 mt-1 mb-1"
                 [class.bg-sky]="!submitted"
                 [class.bg-success]="isCorrect && submitted"
-                [class.bg-danger]="!isCorrect && submitted"
+                [class.bg-danger]="isCorrect === false && submitted"
                 #fragment>
                 </div>
             </div>

@@ -1,0 +1,16 @@
+<div class="container">
+    <div class="mt-5 mb-5 text-center">
+        <div [ngSwitch]="code">
+            <div *ngSwitchCase="500">
+                <h1 class="text-danger">Error 500 - Máy chủ hiện đang gặp sự cố!</h1>
+                <h2 class="text-danger">Bạn vui lòng quay lại sau</h2>
+            </div>
+            <div *ngSwitchCase="403">
+                <h1 class="text-danger">Error 403 - Bạn không có quyền truy cập vào trang này!</h1>
+            </div>
+            <div *ngSwitchCase="404">
+                <h1 class="text-danger">Error 404 - Trang này không tồn tại hoặc đã bị xóa!</h1>
+            </div>
+        </div>
+    </div>
+</div>

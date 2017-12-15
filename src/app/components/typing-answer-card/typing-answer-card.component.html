@@ -11,7 +11,7 @@
             (click)="submit()"
             [disabled]="disableSubmit"
             [class.btn-correct]="isCorrect && submitted"
-            [class.btn-wrong]="!isCorrect && submitted"
+            [class.btn-wrong]="isCorrect === false && submitted"
             [class.btn-focus]="submitted">Kiểm tra</button>
         </div>
         <div [class.blocker]="submitted"></div>

@@ -18,7 +18,7 @@ export class UserResolve implements Resolve<User> {
         const username = route.params['username'];
         return this.user.getByUsername(username)
         .catch(() => {
-            this.router.navigate(['404']);
+            this.router.navigate(['error', 404]);
             return Observable.of(null);
         });
     }

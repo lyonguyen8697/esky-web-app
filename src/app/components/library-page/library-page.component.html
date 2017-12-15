@@ -1,0 +1,10 @@
+<div class="container">
+    <div>
+        <router-outlet></router-outlet>
+    </div>
+    <div class="bg-light">
+        <input type="text" class="form-control" [(ngModel)]="filter">
+        <app-questions-table [questions]="questions" [filter]="filter"></app-questions-table>
+    </div>
+
+</div>

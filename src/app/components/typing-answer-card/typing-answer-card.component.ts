@@ -28,6 +28,7 @@ export class TypingAnswerCardComponent implements OnChanges {
     }
 
     reset() {
+        this.isCorrect = null;
         this.submitted = false;
         this.value = '';
         this.disableSubmit = true;

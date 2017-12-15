@@ -1,0 +1,162 @@
+<div class="card card-shadow">
+    <div class="card-header bg-sky">
+        Lesson Creator
+    </div>
+    <div class="card-body">
+        <form [formGroup]="form" novalidate>
+            <div class="form-group row" [hidden]="isCreate">
+                <label class="col-sm-4 col-form-label" for="questiontext">Mã</label>
+                <div class="col-sm-8">
+                    <div class="position-relative">
+                        <input type="text" class="form-control-plaintext" [value]="lesson.id" disabled>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="subject">Chủ đề</label>
+                <div class="col-sm-8">
+                    <div class="position-relative">
+                        <input type="text" id="subject" class="form-control" placeholder="Chủ đề" formControlName="subject" [class.form-control-plaintext]="!editing"
+                            trim>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="title">Tựa đề</label>
+                <div class="col-sm-8">
+                    <div class="position-relative">
+                        <input type="text" id="title" class="form-control" placeholder="Tựa đề" formControlName="title" [class.form-control-plaintext]="!editing"
+                            trim>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="description">Mô tả</label>
+                <div class="col-sm-8">
+                    <div class="position-relative">
+                        <input type="text" id="description" class="form-control" placeholder="Mô tả" formControlName="description" [class.form-control-plaintext]="!editing"
+                            trim>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="level">Cấp độ</label>
+                <div class="col-sm-8">
+                    <div class="position-relative">
+                        <input type="number" id="level" class="form-control" formControlName="level" [class.form-control-plaintext]="!editing" trim>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row" [hidden]="isCreate">
+                <label class="col-sm-4 col-form-label" for="note">Ghi chú</label>
+                <div class="col-sm-8">
+                    <div class="position-relative">
+                        <textarea type="number" id="note" class="form-control" placeholder="Ghi chú" formControlName="note" [class.form-control-plaintext]="!editing"
+                            trim></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label text-lg" for="questions">Danh sách câu hỏi</label>
+                <div class="col-sm-8">
+                    <button type="button" class="btn btn-success float-right ml-2" (click)="openQuestionSelectModalButtonClicked()" [hidden]="!editing">
+                        <i class="fas fa-plus-circle mr-1"></i>
+                        Thêm
+                    </button>
+                    <button type="button" class="btn btn-danger float-right ml-2" (click)="removeQuestionButtonClicked()" [disabled]="selectedRemoveQuestions.length === 0" [hidden]="!editing">
+                        <i class="fas fa-minus-circle mr-1"></i>
+                        Xóa
+                    </button>
+
+                </div>
+                <div class="mx-3 mt-1">
+                    <app-questions-table [questions]="editingQuestions" [(selecteds)]="selectedRemoveQuestions" [selectable]="editing" height="300px" selectedClass="bg-danger"
+                        border="true"></app-questions-table>
+                </div>
+            </div>
+            <div *ngIf="!editing; else editCase" class="d-flex justify-content-end">
+                <button type="button" class="btn btn-danger ml-2" (click)="deleteButtonClicked()" [hidden]="isCreate">
+                    <i class="far fa-trash-alt mr-1"></i>
+                    Xóa bài học
+                </button>
+                <button type="button" class="btn btn-warning ml-2" (click)="edit()">
+                    <i class="fas fa-pencil-alt mr-1"></i>
+                    Chỉnh sửa
+                </button>
+            </div>
+            <ng-template #editCase>
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-primary ml-2" (click)="create()" [disabled]="!isFormValid || !isFormChanged || submitting"
+                        [hidden]="!isCreate">
+                        <i class="far fa-plus-square mr-1"></i>
+                        Thêm
+                    </button>
+                    <button type="button" class="btn btn-secondary ml-2" (click)="cancelEditButtonClicked()" [hidden]="isCreate">
+                        <i class="far fa-times-circle mr-1"></i>
+                        Hủy
+                    </button>
+                    <button type="button" class="btn btn-primary ml-2" (click)="save()" [disabled]="!isFormValid || !isFormChanged || submitting"
+                        [hidden]="isCreate">
+                        <i class="far fa-save mr-1"></i>
+                        Lưu
+                    </button>
+                </div>
+            </ng-template>
+        </form>
+    </div>
+</div>
+<app-modal [modal]="deleteModal" title="Xóa bài học">
+    <div class="form-group">
+        <label for="note">Ghi chú</label>
+        <textarea class="form-control" id="note" placeholder="Ghi chú" [(ngModel)]="deleteNote" trim></textarea>
+    </div>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary ml-2" (click)="delete()">
+            Đồng ý
+        </button>
+        <button type="button" class="btn btn-secondary ml-2" (click)="hideModal(deleteModal)">
+            Quay lại
+        </button>
+    </div>
+</app-modal>
+<app-modal [modal]="confirmModal" title="Thông báo">
+    <p>{{confirmContent}}</p>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary ml-2" (click)="confirmOk()">
+            Đồng ý
+        </button>
+        <button type="button" class="btn btn-secondary ml-2" (click)="confirmCancel(confirmModal)">
+            Quay lại
+        </button>
+    </div>
+</app-modal>
+<app-modal [modal]="responseModal" title="Thông báo">
+    <div *ngIf="serverError; else success">
+        <p class="text-center">Lỗi: {{serverError}}!</p>
+    </div>
+    <ng-template #success>
+        <p class="text-center">Thao tác thành công</p>
+    </ng-template>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary ml-2" (click)="accept()">
+            Đồng ý
+        </button>
+    </div>
+</app-modal>
+<app-modal [modal]="questionSelectModal" title="Chọn câu hỏi" extraLarge="true">
+    <div class="form-group">
+        <input type="text" class="form-control" placeholder="Tìm kiếm" [(ngModel)]="questionFilter">
+    </div>
+    <div>
+        <app-questions-table [questions]="canSelectQuestions" [filter]="questionFilter" [(selecteds)]="selectedNewQuestions" height="59vh"
+            border="true"></app-questions-table>
+    </div>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-secondary ml-2" (click)="cancelAddQuestionButtonClicked()">
+            Hủy
+        </button>
+        <button type="button" class="btn btn-primary ml-2" (click)="addQuestionButtonClicked()" [disabled]="selectedNewQuestions.length === 0">
+            Thêm câu hỏi
+        </button>
+    </div>
+</app-modal>

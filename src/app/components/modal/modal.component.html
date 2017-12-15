@@ -1,17 +1,25 @@
-<div class="modal" [id]="modal" [class.fade]="fade" tabindex="-1" role="dialog" [attr.aria-labelledby]="modal + 'Label'" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" [id]="modal + 'Label'">
-              {{title}}
-          </h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+<div class="modal" [id]="modal" [class.fade]="fade" tabindex="-1" role="dialog" [attr.aria-labelledby]="modal + 'Label'"
+    aria-hidden="true">
+    <div class="modal-dialog" [class.modal-sm]="small" [class.modal-lg]="large" [class.modal-xl]="extraLarge" role="document">
+        <div *ngIf="!customForm; else custom">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" [id]="modal + 'Label'">
+                        {{title}}
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ng-content></ng-content>
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-            <ng-content></ng-content>
-        </div>
-      </div>
+        <ng-template #custom>
+            <div class="custom">
+                <ng-content></ng-content>
+            </div>
+        </ng-template>
     </div>
-  </div>
+</div>

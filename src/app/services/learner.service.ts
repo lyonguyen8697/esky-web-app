@@ -13,13 +13,15 @@ import { Learner } from '../models/learner.model';
 import { LevelInfo } from '../models/level-info.model';
 
 import 'rxjs/add/operator/map';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable()
 export class LearnerService {
 
     apiUrl = '/api/learners';
 
-    constructor(private authHttp: AuthenticationHttp) { }
+    constructor(private authHttp: AuthenticationHttp,
+                private storage: LocalStorageService) { }
 
     get(): Observable<Learner> {
         return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl))
@@ -28,6 +30,7 @@ export class LearnerService {
             const learner = new Learner(res);
             return this.getLevelInfo().map((levelInfo: LevelInfo) => {
                 learner.levelInfo = levelInfo;
+                this.storage.setLearner(learner);
                 return learner;
             });
         });

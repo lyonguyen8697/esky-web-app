@@ -12,10 +12,4 @@ export class HomePageComponent {
         private authService: AuthenticationService
     ) { }
 
-    signOut() {
-        this.authService.signOut();
-    }
-
-    getMessage() {
-    }
 }

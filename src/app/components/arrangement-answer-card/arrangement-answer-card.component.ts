@@ -34,9 +34,11 @@ export class ArrangementAnswerCardComponent implements OnChanges {
 
     reset() {
         this.answerFragments = [];
+        this.isCorrect = null;
         this.disableSubmit = true;
         this.submitted = false;
         this.resetFlag = false;
+        this.shuffleChoices();
         setTimeout(() => this.resetFlag = true, 100);
     }
 
@@ -63,6 +65,13 @@ export class ArrangementAnswerCardComponent implements OnChanges {
             this.disableSubmit = false;
         } else {
             this.disableSubmit = true;
+        }
+    }
+
+    shuffleChoices() {
+        for (let i = this.question.choices.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [this.question.choices[i], this.question.choices[j]] = [this.question.choices[j], this.question.choices[i]];
         }
     }
 }

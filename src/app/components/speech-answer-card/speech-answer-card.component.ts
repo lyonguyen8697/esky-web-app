@@ -25,6 +25,8 @@ export class SpeechAnswerCardComponent implements OnChanges {
 
     submitted: boolean;
 
+    networkError: boolean;
+
     submitTimeOutId: number;
 
     recognizeTime = 5000;
@@ -41,10 +43,13 @@ export class SpeechAnswerCardComponent implements OnChanges {
         this.speech.stopRecognize();
         this.textRecognized = '';
         this.recognizing = false;
+        this.isCorrect = null;
         this.submitted = false;
+        this.networkError = false;
     }
 
     recognize() {
+        this.speech.stopRecognize();
         this.recognizing = true;
         const words = this.isWord(this.question.phrase) ? this.question.phrase : undefined;
         this.speech.recognize([words])
@@ -60,7 +65,7 @@ export class SpeechAnswerCardComponent implements OnChanges {
                 }
             },
             error => {
-                this.submit();
+                this.submit(error);
             },
             () => {
                 if (!this.submitted) {
@@ -75,10 +80,14 @@ export class SpeechAnswerCardComponent implements OnChanges {
         }, this.recognizeTime);
     }
 
-    submit() {
+    submit(error?) {
         window.clearTimeout(this.submitTimeOutId);
         this.speech.stopRecognize();
         this.recognizing = false;
+        if (error) {
+            this.networkError = true;
+            return;
+        }
         this.submitted = true;
         this.answer.emit(this.textRecognized);
     }

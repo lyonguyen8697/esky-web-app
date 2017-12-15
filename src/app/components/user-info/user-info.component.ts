@@ -8,7 +8,7 @@ import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import 'rxjs/add/operator/debounceTime';
 
 import { UserService } from '../../services/user.service';
-import { ValidatorService } from '../../services/validator.service';
+import { UserInfoValidatorService } from '../../services/user-info-validator.service';
 import { ModalService } from '../../services/modal.service';
 import { TooltipService } from '../../services/tooltip.service';
 import { User } from '../../models/user.model';
@@ -82,7 +82,7 @@ export class UserInfoComponent implements OnInit {
                 private fb: FormBuilder,
                 private location: Location,
                 private userService: UserService,
-                private validator: ValidatorService,
+                private validator: UserInfoValidatorService,
                 private modal: ModalService,
                 private tooltip: TooltipService) { }
 

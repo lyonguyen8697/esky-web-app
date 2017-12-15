@@ -7,10 +7,11 @@
             </button>
         </div>
         <div class="text-recognized text-center d-flex justify-content-center">
-            <h3 class="text-muted" [class.d-none]="recognizing || submitted">Bấm nút để nói</h3>
+            <h3 class="text-muted" [class.d-none]="recognizing || submitted || networkError">Bấm nút để nói</h3>
+            <h3 class="text-danger" [class.d-none]="recognizing || submitted || !networkError">Kết nối thất bại. Vui lòng thử lại</h3>
             <div class="balancer" [class.d-none]="!textRecognized || submitted"></div>
             <h3 [class.text-success]="isCorrect && submitted"
-            [class.text-danger]="!isCorrect && submitted">
+            [class.text-danger]="isCorrect === false && submitted">
                 {{textRecognized}}
             </h3>
             <div class="dot-container justify-content-center align-items-end m-1"

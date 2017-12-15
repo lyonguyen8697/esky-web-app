@@ -47,7 +47,9 @@ export class AuthenticationHttp extends Http {
 
     handleError(res: Response) {
         const error: ErrorMessage = res.json();
-        if (error.statusCode === 401) {
+        if (error.statusCode === 500) {
+            this.router.navigate(['error', 500]);
+        } else if (error.statusCode === 401) {
             this.authService.requireSignIn(this.router.url);
         } else if (error.statusCode === 403) {
             this.router.navigate(['']);

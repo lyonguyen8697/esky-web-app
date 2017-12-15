@@ -12,7 +12,11 @@ const userRoutes: Routes = [
         component: UserInfoComponent,
         resolve: {
             user: UserResolve
-        }
+        },
+    },
+    {
+        path: '**',
+        redirectTo: 'error/404'
     }
 ];
 

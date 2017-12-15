@@ -13,7 +13,7 @@ import {
 
 import { AuthenticationService } from '../../services/authentication.service';
 import { UserService } from '../../services/user.service';
-import { ValidatorService } from '../../services/validator.service';
+import { UserInfoValidatorService } from '../../services/user-info-validator.service';
 import { User } from '../../models/user.model';
 import { TooltipService } from '../../services/tooltip.service';
 import { rotateInOut } from '../../animations/rotate-in-out.animation';
@@ -51,7 +51,7 @@ import { SignUpInfo } from '../../models/sign-up-info.model';
         ]),
         trigger('changeColor', [
             state('signIn', style({ 'background-color': '#626', 'border-color': '#626'})),
-            state('signUp', style({ 'background-color': '#28a745', 'border-color': '#28a745'})),
+            state('signUp', style({ 'background-color': '#FD6504', 'border-color': '#FD6504'})),
             transition('signUp <=> signIn', [
                 animate(400)
             ])
@@ -81,7 +81,7 @@ export class SignComponent {
     constructor(private router: Router,
         private authService: AuthenticationService,
         private user: UserService,
-        private validator: ValidatorService,
+        private validator: UserInfoValidatorService,
         private tooltip: TooltipService) { }
 
     submit() {

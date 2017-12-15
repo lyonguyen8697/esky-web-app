@@ -26,14 +26,14 @@
             </div>
         </div>
         <div class="result-buttons mt-4 mx-auto d-flex justify-content-center">
-            <button type="button" class="btn-refresh btn btn-warning mx-1">
+            <button type="button" class="btn-refresh btn btn-warning mx-1" [hidden]="true">
                 <i class="fa fa-refresh pr-sm-1" aria-hidden="true"></i>
                 <span class="d-none d-md-inline">Làm lại</span>
             </button>
             <button type="button" class="btn-continue btn btn-primary mx-1" (click)="continue()">
                 Tiếp tục
             </button>
-            <div class="btn-placer mx-1"></div>
+            <div class="btn-placer mx-1" [hidden]="true"></div>
         </div>
     </div>
 </div>

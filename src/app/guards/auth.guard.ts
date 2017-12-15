@@ -33,6 +33,12 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     }
 
     checkAuthorization(allowedRole: Role): boolean {
-        return this.authService.userInRole(allowedRole);
+        if (this.authService.userInRole(allowedRole)) {
+            return true;
+        }
+
+        this.router.navigate(['error', 403]);
+
+        return false;
     }
 }

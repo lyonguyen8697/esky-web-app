@@ -1,0 +1,278 @@
+<div class="card card-shadow">
+    <div class="card-header bg-sky">
+        Question Creator
+    </div>
+    <div class="card-body">
+        <form [formGroup]="form" novalidate>
+            <div class="form-group row" [hidden]="isCreate">
+                <label class="col-sm-4 col-form-label" for="questiontext">ID</label>
+                <div class="col-sm-8">
+                    <div class="position-relative">
+                        <input type="text" class="form-control-plaintext" [value]="question.id" disabled>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="questiontext">Câu hỏi</label>
+                <div class="col-sm-8">
+                    <div class="position-relative">
+                        <input type="text" id="questiontext" class="form-control" placeholder="Câu hỏi" formControlName="questiontext" [class.form-control-plaintext]="!editing"
+                            trim>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="phrase">Cụm từ</label>
+                <div class="col-sm-8">
+                    <div class="position-relative">
+                        <input type="text" id="phrase" class="form-control" placeholder="Cụm từ" formControlName="phrase" [class.form-control-plaintext]="!editing"
+                            trim>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="voice">Phát âm</label>
+                <div class="col-sm-8">
+                    <div class="position-relative">
+                        <input type="text" id="voice" class="form-control" placeholder="Phát âm" formControlName="voice" [class.form-control-plaintext]="!editing"
+                            trim>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row" hidden>
+                <label class="col-sm-4 col-form-label" for="picture">Hình ảnh</label>
+                <div class="col-sm-8">
+                    <div class="position-relative">
+                        <label class="custom-file">
+                            <input type="file" id="picture" class="custom-file-input" placeholder="Hình ảnh">
+                            <span class="custom-file-control"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="answerType">Cách trả lời</label>
+                <div class="col-sm-8">
+                    <div class="custom-controls-stacked">
+                        <label class="custom-control custom-radio">
+                            <input type="radio" class="custom-control-input" formControlName="answerType" value="ARRANGEMENT">
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description">Sắp xếp</span>
+                        </label>
+                        <label class="custom-control custom-radio">
+                            <input type="radio" class="custom-control-input" formControlName="answerType" value="MULTI_CHOICE">
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description">Trắc nghiệm</span>
+                        </label>
+                        <label class="custom-control custom-radio">
+                            <input type="radio" class="custom-control-input" formControlName="answerType" value="SPEECH">
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description">Phát âm</span>
+                        </label>
+                        <label class="custom-control custom-radio">
+                            <input type="radio" class="custom-control-input" formControlName="answerType" value="TYPING">
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description">Đánh chữ</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="answerType.value === 'ARRANGEMENT'">
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label" for="arrangementAnswer">Đáp án</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="arrangementAnswer" placeholder="Đáp án" [class.form-control-plaintext]="!editing"
+                            formControlName="arrangementAnswer" trim>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label" for="newArrangementChoice">Lựa chọn</label>
+                    <div class="col-sm-8">
+                        <div class="input-group mb-1" [hidden]="!editing">
+                            <input type="text" id="newArrangementChoice" class="form-control" placeholder="Nhập lựa chọn mới" formControlName="newArrangementChoice"
+                                (keydown.enter)="addArrangementChoiceButtonClicked()" trim>
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" type="button" [disabled]="!editing || newArrangementChoice.invalid" (click)="addArrangementChoiceButtonClicked()">Thêm</button>
+                            </span>
+                        </div>
+                        <div formArrayName="arrangementChoices" class="arrangement-choices d-flex flex-wrap">
+                            <div *ngFor="let choice of arrangementChoices.controls; index as i" class="position-relative mb-1 mr-1 arrangement-choice"
+                                (click)="editArrangementChoice(choiceBlock)">
+                                <input type="text" class="form-control text-center" placeholder="Lựa chọn" [formControlName]="i" [class.input-block]="editing"
+                                    [class.form-control-plaintext]="choiceBlock.readOnly" [class.bg-info]="choiceBlock.readOnly && i >= correctArrangementChoices.length"
+                                    [class.text-white]="choiceBlock.readOnly" (blur)="endArrangementChoiceEdit(i, choiceBlock)"
+                                    [class.bg-success]="choiceBlock.readOnly && i < correctArrangementChoices.length" [class.correct-choice]="i < correctArrangementChoices.length"
+                                    (keydown.enter)="endArrangementChoiceEdit(i, choiceBlock)" readonly #choiceBlock trim>
+                                <div class="btn-input-action align-items-center" (click)="removeArrangementChoice(i)">
+                                    <span class="fa fa-minus-circle text-danger m-2"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="answerType.value === 'MULTI_CHOICE'">
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label" for="multiChoiceChoices">Lựa chọn</label>
+                    <div class="col-sm-8">
+                        <div formArrayName="multiChoiceChoices" id="multiChoiceChoices">
+                            <div *ngFor="let choice of multiChoiceChoices.controls; index as i" class="mb-1 position-relative" (click)="editMultiChoice(choiceBlock)">
+                                <input type="text" class="form-control" placeholder="Nhập lựa chọn" [formControlName]="i" [class.input-block]="editing" [class.form-control-plaintext]="choiceBlock.readOnly"
+                                    [class.bg-info]="choiceBlock.readOnly && i != multiChoiceAnswer.at(0).value" [class.text-white]="choiceBlock.readOnly"
+                                    [class.bg-success]="choiceBlock.readOnly && i == multiChoiceAnswer.at(0).value" [class.correct-answer]="i == multiChoiceAnswer.at(0).value"
+                                    (blur)="endMultiChoiceEdit(choiceBlock)" (keydown.enter)="endMultiChoiceEdit(choiceBlock)"
+                                    readonly #choiceBlock trim>
+                                <div class="btn-input-action align-items-center" (click)="markAtAnswer($event, i)" [hidden]="i == multiChoiceAnswer.at(0).value">
+                                    <span class="fa fa-check-circle text-white m-2"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="answerType.value === 'SPEECH' || answerType.value === 'TYPING'">
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label" for="newSpeechAndTypingAnswer">Đáp án</label>
+                    <div class="col-sm-8">
+                        <div class="position-relative" class="mb-1" [hidden]="!editing">
+                            <div class="input-group">
+                                <input type="text" id="newSpeechAndTypingAnswer" class="form-control" placeholder="Nhập đáp đáp án mới" formControlName="newSpeechAndTypingAnswer"
+                                    (keydown.enter)="addSpeechAndTypingAnswerButtonClicked()" trim>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="button" [disabled]="!editing || newSpeechAndTypingAnswer.invalid" (click)="addSpeechAndTypingAnswerButtonClicked()">Thêm</button>
+                                </span>
+                            </div>
+                        </div>
+                        <div formArrayName="speechAndTypingAnswers">
+                            <div *ngFor="let answer of speechAndTypingAnswers.controls; index as i" class="mb-1 position-relative" (click)="editSpeechAndTypingAnswer(answerBlock)">
+                                <input type="text" class="form-control" placeholder="Nhập đáp án" [formControlName]="i" [class.input-block]="editing" [class.form-control-plaintext]="answerBlock.readOnly"
+                                    [class.bg-success]="answerBlock.readOnly" [class.text-white]="answerBlock.readOnly" (blur)="endSpeechAndTypingAnswerEdit(i, answerBlock)"
+                                    (keydown.enter)="endSpeechAndTypingAnswerEdit(i, answerBlock)" readonly #answerBlock trim>
+                                <div class="btn-input-action align-items-center" (click)="removeSpeechAndTypingAnswer(i)">
+                                    <span class="fa fa-minus-circle text-danger m-2"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="difficulty">Độ khó</label>
+                <div class="col-sm-8">
+                    <div class="custom-controls-stacked">
+                        <label class="custom-control custom-radio">
+                            <input type="radio" class="custom-control-input" formControlName="difficulty" value="BASIC">
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description">Cơ bản</span>
+                        </label>
+                        <label class="custom-control custom-radio">
+                            <input type="radio" class="custom-control-input" formControlName="difficulty" value="MEDIUM">
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description">Trung bình</span>
+                        </label>
+                        <label class="custom-control custom-radio">
+                            <input type="radio" class="custom-control-input" formControlName="difficulty" value="ADVANCED">
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description">Nâng cao</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="!isCreate">
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label" for="note">Ghi chú</label>
+                    <div class="col-sm-8">
+                        <textarea class="form-control" id="note" placeholder="Ghi chú" formControlName="note" trim></textarea>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary ml-2" (click)="previewButtonClicked()" [disabled]="!isFormValid || submitting">
+                <i class="far fa-save mr-1"></i>
+                Xem
+            </button>
+            <div *ngIf="!editing; else editCase" class="d-flex justify-content-end">
+                <button type="button" class="btn btn-danger ml-2" (click)="deleteButtonClicked()" [hidden]="isCreate">
+                    <i class="far fa-trash-alt mr-1"></i>
+                    Xóa câu hỏi
+                </button>
+                <button type="button" class="btn btn-warning ml-2" (click)="edit()">
+                    <i class="fas fa-pencil-alt mr-1"></i>
+                    Chỉnh sửa
+                </button>
+            </div>
+            <ng-template #editCase>
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-primary ml-2" (click)="create()" [disabled]="!isFormValid || !isFormChanged || submitting"
+                        [hidden]="!isCreate">
+                        <i class="far fa-plus-square mr-1"></i>
+                        Thêm
+                    </button>
+                    <button type="button" class="btn btn-secondary ml-2" (click)="cancelEditButtonClicked()" [hidden]="isCreate">
+                        <i class="far fa-times-circle mr-1"></i>
+                        Hủy
+                    </button>
+                    <button type="button" class="btn btn-primary ml-2" (click)="save()" [disabled]="!isFormValid || !isFormChanged || submitting"
+                        [hidden]="isCreate">
+                        <i class="far fa-save mr-1"></i>
+                        Lưu
+                    </button>
+                </div>
+            </ng-template>
+        </form>
+    </div>
+</div>
+<app-modal [modal]="deleteModal" [title]="'Xóa câu hỏi'">
+    <div class="form-group">
+        <label for="note">Ghi chú</label>
+        <textarea class="form-control" id="note" placeholder="Ghi chú" [(ngModel)]="deleteNote" trim></textarea>
+    </div>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary ml-2" (click)="delete()">
+            Đồng ý
+        </button>
+        <button type="button" class="btn btn-secondary ml-2" (click)="hideModal(deleteModal)">
+            Quay lại
+        </button>
+    </div>
+</app-modal>
+<app-modal [modal]="confirmModal" [title]="'Thông báo'">
+    <p>{{confirmContent}}</p>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary ml-2" (click)="confirmOk()">
+            Đồng ý
+        </button>
+        <button type="button" class="btn btn-secondary ml-2" (click)="confirmCancel(confirmModal)">
+            Quay lại
+        </button>
+    </div>
+</app-modal>
+<app-modal [modal]="responseModal" [title]="'Thông báo'">
+    <div *ngIf="serverError; else success">
+        <p class="text-center">Lỗi: {{serverError}}!</p>
+    </div>
+    <ng-template #success>
+        <p class="text-center">Thao tác thành công</p>
+    </ng-template>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary ml-2" (click)="accept()">
+            Đồng ý
+        </button>
+    </div>
+</app-modal>
+<app-modal [modal]="previewModal" customForm="true">
+    <div *ngIf="previewQuestion">
+        <div class="mb-1 mb-md-2" [@slideInOut]="slideState">
+            <app-question-card [question]="previewQuestion"></app-question-card>
+        </div>
+        <div [ngSwitch]="previewQuestion.answerType" [@slideInOutDelay]="slideState">
+            <app-arrangement-answer-card *ngSwitchCase="'ARRANGEMENT'" [question]="previewQuestion" [isCorrect]="previewIsCorrect" (answer)="answerPreviewQuestion($event)">
+            </app-arrangement-answer-card>
+            <app-multi-choice-answer-card *ngSwitchCase="'MULTI_CHOICE'" [question]="previewQuestion" [isCorrect]="previewIsCorrect" (answer)="answerPreviewQuestion($event)">
+            </app-multi-choice-answer-card>
+            <app-speech-answer-card *ngSwitchCase="'SPEECH'" [question]="previewQuestion" [isCorrect]="previewIsCorrect" (answer)="answerPreviewQuestion($event)">
+            </app-speech-answer-card>
+            <app-typing-answer-card *ngSwitchCase="'TYPING'" [question]="previewQuestion" [isCorrect]="previewIsCorrect" (answer)="answerPreviewQuestion($event)">
+            </app-typing-answer-card>
+        </div>
+    </div>
+</app-modal>

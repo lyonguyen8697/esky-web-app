@@ -26,6 +26,7 @@ export class MultiChoiceAnswerCardComponent implements OnChanges {
     }
 
     reset() {
+        this.isCorrect = null;
         this.currentChoice = null;
         this.submitted = false;
     }

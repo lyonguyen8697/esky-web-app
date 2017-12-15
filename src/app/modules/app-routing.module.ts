@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { WelcomePageComponent } from '../components/welcome-page/welcome-page.component';
-import { PageNotFoundComponent } from '../components/page-not-found/page-not-found.component';
+import { ErrorPageComponent } from '../components/error-page/error-page.component';
 
 import { SignOutGuard } from '../guards/sign-out.guard';
 
@@ -13,8 +13,18 @@ const appRoutes: Routes = [
         component: WelcomePageComponent
     },
     {
-        path: '404',
-        component: PageNotFoundComponent
+        path: 'error',
+        children: [
+            {
+                path: ':code',
+                component: ErrorPageComponent
+            },
+            {
+                path: '',
+                redirectTo: '404',
+                pathMatch: 'full'
+            }
+        ]
     }
 ];
 

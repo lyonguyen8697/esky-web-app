@@ -1,7 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
 body {
-    background: #efefef;
     font-family: 'Rubik', sans-serif;
+}
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    background-color: #e2faff;
+    background-image: url('assets/images/hills.svg');
+    background-position: bottom;
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+@media (min-width: 1200px) {
+    .background{
+        height: 110%;
+    }
 }
 .app-page {
     margin-top: 100px; 

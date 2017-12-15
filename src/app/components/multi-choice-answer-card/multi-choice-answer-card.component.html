@@ -5,7 +5,7 @@
                 <button type="button" class="btn btn-outline-info btn-block btn-lg"
                 (click)="submit(i.toString())" 
                 [class.btn-correct]="isCorrect && i == currentChoice && submitted"
-                [class.btn-wrong]="!isCorrect && submitted"
+                [class.btn-wrong]="isCorrect === false && submitted"
                 [class.btn-focus]="i == currentChoice && submitted">
                     {{choice}}
                 </button>

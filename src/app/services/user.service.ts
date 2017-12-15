@@ -28,7 +28,7 @@ export class UserService {
         return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl))
         .map(res => {
             const user: User = res.json();
-            this.storage.user.emit(user);
+            this.storage.setUser(user);
             return user;
         });
     }

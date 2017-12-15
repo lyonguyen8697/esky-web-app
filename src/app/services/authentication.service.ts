@@ -60,7 +60,7 @@ export class AuthenticationService {
     }
 
     signOut() {
-        this.storage.removeUser();
+        this.storage.removeAll();
         this.redirectUrl = null;
         this.router.navigate(['welcome']);
     }

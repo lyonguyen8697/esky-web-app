@@ -149,11 +149,16 @@ export class LessonComponent implements OnInit {
     }
 
     arrangeQuestion() {
-        this.lesson.remains.forEach(id => {
+        for (let i = 0; i < this.lesson.remains.length; i++) {
+            const id = this.lesson.remains[i];
             const question = this.questions.find(n => n.id === id);
-            this.questions.splice(this.questions.indexOf(question), 1);
-            this.questions.push(question);
-        });
+            if (question) {
+                this.questions.splice(this.questions.indexOf(question), 1);
+                this.questions.push(question);
+            } else {
+                this.lesson.remains.splice(i, 1);
+            }
+        }
     }
 
     getLessonRemains(): string[] {

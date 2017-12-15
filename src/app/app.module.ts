@@ -10,11 +10,13 @@ import { UserModule } from './modules/user.module';
 import { VerifyModule } from './modules/verify.module';
 import { HomeModule } from './modules/home.module';
 import { StudyModule } from './modules/study.module';
+import { LibraryModule } from './modules/library.module';
+import { CreatorModule } from './modules/creator.module';
 
 import { AppComponent } from './app.component';
 import { NgProgressModule, NgProgressBrowserXhr } from 'ngx-progressbar';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { ErrorPageComponent } from './components/error-page/error-page.component';
 
 import { ClickOutsideDirective } from './directives/click-outside.directive';
 
@@ -22,7 +24,7 @@ import { ClickOutsideDirective } from './directives/click-outside.directive';
   declarations: [
     AppComponent,
     NavbarComponent,
-    PageNotFoundComponent,
+    ErrorPageComponent,
     ClickOutsideDirective
   ],
   imports: [
@@ -34,6 +36,8 @@ import { ClickOutsideDirective } from './directives/click-outside.directive';
     VerifyModule,
     HomeModule,
     StudyModule,
+    LibraryModule,
+    CreatorModule,
     AppRoutingModule,
     UserModule,
     AuthenticationModule

@@ -7,7 +7,7 @@ import { ChallengeComponent } from '../components/challenge/challenge.component'
 
 import { AuthGuard } from '../guards/auth.guard';
 import { LessonGuard } from '../guards/lesson.guard';
-import { LessonReslover } from '../services/lesson.resolver.service';
+import { LearnerLessonReslover } from '../services/learner-lesson.resolver.service';
 import { CanDeactivateGuard } from '../guards/can-deactivate.guard';
 
 const studyRoutes: Routes = [
@@ -21,7 +21,7 @@ const studyRoutes: Routes = [
                 canDeactivate: [CanDeactivateGuard],
                 component: LessonComponent,
                 resolve: {
-                    lesson: LessonReslover
+                    lesson: LearnerLessonReslover
                 }
             },
             {
