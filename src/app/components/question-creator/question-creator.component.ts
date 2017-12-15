@@ -3,8 +3,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray, FormControl, AbstractControl, Validators } from '@angular/forms';
 
 import { ContributorService } from '../../services/contributor.service';
+import { QuestionService } from '../../services/question.service';
 import { Question } from '../../models/question.model';
 import { TooltipService } from '../../services/tooltip.service';
+import { AudioService } from '../../services/audio.service';
 import { AnswerType } from '../../enums/answer-type.enum';
 import { ModalService } from '../../services/modal.service';
 import { slideInOut } from '../../animations/slide-in-out.animation';
@@ -14,8 +16,8 @@ import { slideInOut } from '../../animations/slide-in-out.animation';
     templateUrl: 'question-creator.component.html',
     styleUrls: ['question-creator.component.css'],
     animations: [
-        slideInOut({ slideOut: false, timing: '200ms', translate: '15%'}),
-        slideInOut({ name: 'slideInOutDelay', slideOut: false, timing: '200ms 50ms', translate: '15%'})
+        slideInOut({ slideOut: false, timing: '200ms', translate: '15%' }),
+        slideInOut({ name: 'slideInOutDelay', slideOut: false, timing: '200ms 50ms', translate: '15%' })
     ]
 })
 export class QuestionCreatorComponent implements OnInit {
@@ -179,9 +181,12 @@ export class QuestionCreatorComponent implements OnInit {
     }
 
     get isFormValid() {
+        return this.isQuestionValid && (this.isCreate || this.note.valid);
+    }
+
+    get isQuestionValid() {
         const valid = this.questiontext.valid && this.phrase.valid
-            && this.voice.valid && this.picture.valid && (this.isCreate || this.note.valid)
-            && (this.phrase.value || this.voice.value || this.picture.value);
+            && this.voice.valid && this.picture.valid && (this.phrase.value || this.voice.value || this.picture.value);
         switch (this.answerType.value) {
             case 'ARRANGEMENT':
                 return valid && this.arrangementAnswer.valid && this.arrangementChoices.valid;
@@ -197,6 +202,8 @@ export class QuestionCreatorComponent implements OnInit {
         private route: ActivatedRoute,
         private fb: FormBuilder,
         private contributor: ContributorService,
+        private questionService: QuestionService,
+        private audio: AudioService,
         private modal: ModalService,
         private tooltip: TooltipService) { }
 
@@ -630,9 +637,9 @@ export class QuestionCreatorComponent implements OnInit {
     }
 
     previewButtonClicked() {
-        if (this.isFormValid) {
+        if (!this.editing || this.isQuestionValid) {
             this.previewQuestion = this.serialize();
-            this.isPreviewCorrect = false;
+            this.isPreviewCorrect = null;
             this.showModal(this.previewModal);
         }
     }
@@ -650,14 +657,17 @@ export class QuestionCreatorComponent implements OnInit {
     }
 
     answerPreviewQuestion(answer: string) {
-        if (this.previewQuestion.answers.includes(answer)) {
+        if (this.questionService.checkAnswer(this.previewQuestion, answer)) {
             this.isPreviewCorrect = true;
+            this.audio.play(this.audio.correct);
         } else {
             this.isPreviewCorrect = false;
+            this.audio.play(this.audio.wrong);
         }
+        window.setTimeout(() => this.hideModal(this.previewModal), 1000);
     }
 
-    confirm(option: { content, ok: Function, cancel: Function}) {
+    confirm(option: { content, ok: Function, cancel: Function }) {
         this.confirmContent = option.content;
         this.confirmOk = option.ok;
         this.confirmCancel = option.cancel;

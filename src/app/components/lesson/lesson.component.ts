@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
@@ -7,6 +7,7 @@ import 'rxjs/add/operator/share';
 
 import { LearnerService } from '../../services/learner.service';
 import { LessonService } from '../../services/lesson.service';
+import { LocalStorageService } from '../../services/local-storage.service';
 import { AudioService } from '../../services/audio.service';
 import { animation } from '../../animations/animation';
 import { slideInOut } from '../../animations/slide-in-out.animation';
@@ -14,6 +15,7 @@ import { Learner } from '../../models/learner.model';
 import { Lesson } from '../../models/lesson.model';
 import { Question } from '../../models/question.model';
 import { AnswerType } from '../../enums/answer-type.enum';
+import { Role } from '../../enums/role.emum';
 
 @Component({
     templateUrl: 'lesson.component.html',
@@ -52,13 +54,18 @@ export class LessonComponent implements OnInit {
 
     slideState: string;
 
+    isEditable: boolean;
+
     constructor(public learnerService: LearnerService,
         private lessonService: LessonService,
+        private local: LocalStorageService,
         private audioService: AudioService,
+        private router: Router,
         private route: ActivatedRoute) { }
 
     ngOnInit() {
         this.getQuestions();
+        this.isEditable = Role[this.local.getUser().role] > Role.LEARNER;
     }
 
     canDeactivate() {
@@ -142,6 +149,14 @@ export class LessonComponent implements OnInit {
         .subscribe(experience => {
             this.experience = experience;
         });
+    }
+
+    gotoLessonCreator() {
+        this.router.navigate(['creator', 'lesson', this.lesson.id]);
+    }
+
+    gotoQuestionCreator() {
+        this.router.navigate(['creator', 'question', this.currentQuestion.id]);
     }
 
     ajustProgressbar() {

@@ -1,16 +1,13 @@
 <div class="lesson-container">
     <div class="lesson-items">
         <div class="progressbar-container mb-1 mb-md-2">
-            <app-progressbar [value]="progressValue" 
-            [striped]="true" 
-            [animated]="true" 
-            [backgroundClass]="'bg-warning'"></app-progressbar>
+            <app-progressbar [value]="progressValue" [striped]="true" [animated]="true" [backgroundClass]="'bg-warning'"></app-progressbar>
         </div>
         <div class="question-container" *ngIf="questions; else loading">
             <div *ngIf="questions.length > 0; else error">
                 <div *ngIf="!finished; else finish">
                     <div class="mb-1 mb-md-2" [@slideInOut]="slideState">
-                        <app-question-card [question]="currentQuestion" (skip)="skipQuestion()"></app-question-card>
+                        <app-question-card [question]="currentQuestion" [creatorButton]="isEditable" (skip)="skipQuestion()" (creator)="gotoQuestionCreator()"></app-question-card>
                     </div>
                     <div [ngSwitch]="currentQuestion.answerType" [@slideInOutDelay]="slideState">
                         <app-arrangement-answer-card *ngSwitchCase="answerType[0]" [question]="currentQuestion" [isCorrect]="isCorrect" (answer)="answer($event)">
@@ -41,4 +38,7 @@
             </div>
         </ng-template>
     </div>
+</div>
+<div class="btn-creator" [hidden]="!isEditable" (click)="gotoLessonCreator()" aria-label="Creator">
+    <i class="fas fa-wrench" aria-hidden="true"></i>
 </div>

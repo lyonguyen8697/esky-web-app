@@ -12,7 +12,13 @@ export class QuestionCardComponent implements OnChanges {
 
     @Input() question: Question;
 
+    @Input() skipButton = true;
+
+    @Input() creatorButton = true;
+
     @Output() skip = new EventEmitter();
+
+    @Output() creator = new EventEmitter();
 
     constructor(private speechService: SpeechService) { }
 
@@ -31,7 +37,11 @@ export class QuestionCardComponent implements OnChanges {
         // this.question.phrase = this.question.phrase ? null : 'How are you';
     }
 
-    skipQuestion() {
+    skipButtonClicked() {
         this.skip.emit();
+    }
+
+    creatorButtonClicked() {
+        this.creator.emit();
     }
 }

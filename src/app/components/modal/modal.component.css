@@ -7,3 +7,12 @@
 .custom {
     pointer-events: auto;
 }
+.no-overflow {
+    overflow: hidden;
+}
+.center {
+    margin-top: 50vh;
+}
+.translate {
+    transform: translateY(-50%);
+}

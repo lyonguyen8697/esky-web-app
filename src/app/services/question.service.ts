@@ -26,4 +26,16 @@ export class QuestionService {
         .map(res => res.json());
     }
 
+    checkAnswer(question: Question, answer: string) {
+        switch (question.answerType) {
+            case 'ARRANGEMENT':
+                return question.answers.join(';') === answer;
+            case 'MULTI_CHOICE':
+            case 'SPEECH':
+            case 'TYPING':
+                return question.answers.includes(answer);
+        }
+        return false;
+    }
+
 }

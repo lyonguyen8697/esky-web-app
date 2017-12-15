@@ -16,10 +16,13 @@
                 </div>
             </div>
         </div>
-        <div class="btn-skip">
-            <button (click)="skipQuestion()" type="button" class="close" aria-label="Close">
+        <div [hidden]="!skipButton" class="btn-skip">
+            <button (click)="skipButtonClicked()" type="button" class="close" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
+        </div>
+        <div [hidden]="!creatorButton" class="btn-creator" (click)="creatorButtonClicked()" aria-label="Creator">
+            <i class="fas fa-pencil-alt mr-1"></i>
         </div>
     </div>
 </div>

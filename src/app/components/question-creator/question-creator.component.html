@@ -186,38 +186,43 @@
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-primary ml-2" (click)="previewButtonClicked()" [disabled]="!isFormValid || submitting">
-                <i class="far fa-save mr-1"></i>
-                Xem
-            </button>
-            <div *ngIf="!editing; else editCase" class="d-flex justify-content-end">
-                <button type="button" class="btn btn-danger ml-2" (click)="deleteButtonClicked()" [hidden]="isCreate">
-                    <i class="far fa-trash-alt mr-1"></i>
-                    Xóa câu hỏi
-                </button>
-                <button type="button" class="btn btn-warning ml-2" (click)="edit()">
-                    <i class="fas fa-pencil-alt mr-1"></i>
-                    Chỉnh sửa
-                </button>
-            </div>
-            <ng-template #editCase>
-                <div class="d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary ml-2" (click)="create()" [disabled]="!isFormValid || !isFormChanged || submitting"
-                        [hidden]="!isCreate">
-                        <i class="far fa-plus-square mr-1"></i>
-                        Thêm
-                    </button>
-                    <button type="button" class="btn btn-secondary ml-2" (click)="cancelEditButtonClicked()" [hidden]="isCreate">
-                        <i class="far fa-times-circle mr-1"></i>
-                        Hủy
-                    </button>
-                    <button type="button" class="btn btn-primary ml-2" (click)="save()" [disabled]="!isFormValid || !isFormChanged || submitting"
-                        [hidden]="isCreate">
-                        <i class="far fa-save mr-1"></i>
-                        Lưu
+            <div class="d-flex justify-content-end">
+                <div class="w-100">
+                    <button type="button" class="btn btn-info ml-2" (click)="previewButtonClicked()" [disabled]="editing && (!isQuestionValid || submitting)">
+                        <i class="fas fa-eye mr-1"></i>
+                        Xem
                     </button>
                 </div>
-            </ng-template>
+                <div *ngIf="!editing; else editCase" class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-danger ml-2" (click)="deleteButtonClicked()" [hidden]="isCreate">
+                        <i class="far fa-trash-alt mr-1"></i>
+                        Xóa câu hỏi
+                    </button>
+                    <button type="button" class="btn btn-warning ml-2" (click)="edit()">
+                        <i class="fas fa-pencil-alt mr-1"></i>
+                        Chỉnh sửa
+                    </button>
+                </div>
+                <ng-template #editCase>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary ml-2" (click)="create()" [disabled]="!isFormValid || !isFormChanged || submitting"
+                            [hidden]="!isCreate">
+                            <i class="far fa-plus-square mr-1"></i>
+                            Thêm
+                        </button>
+                        <button type="button" class="btn btn-secondary ml-2" (click)="cancelEditButtonClicked()" [hidden]="isCreate">
+                            <i class="far fa-times-circle mr-1"></i>
+                            Hủy
+                        </button>
+                        <button type="button" class="btn btn-primary ml-2" (click)="save()" [disabled]="!isFormValid || !isFormChanged || submitting"
+                            [hidden]="isCreate">
+                            <i class="far fa-save mr-1"></i>
+                            Lưu
+                        </button>
+                    </div>
+                </ng-template>
+            </div>
+
         </form>
     </div>
 </div>
@@ -259,19 +264,20 @@
         </button>
     </div>
 </app-modal>
-<app-modal [modal]="previewModal" customForm="true">
+<app-modal [modal]="previewModal" extraLarge="true" customForm="true" center="true">
     <div *ngIf="previewQuestion">
-        <div class="mb-1 mb-md-2" [@slideInOut]="slideState">
-            <app-question-card [question]="previewQuestion"></app-question-card>
+        <div class="mb-1 mb-md-2">
+            <app-question-card [question]="previewQuestion" (skip)="hideModal(this.previewModal)" [creatorButton]="false"></app-question-card>
         </div>
-        <div [ngSwitch]="previewQuestion.answerType" [@slideInOutDelay]="slideState">
-            <app-arrangement-answer-card *ngSwitchCase="'ARRANGEMENT'" [question]="previewQuestion" [isCorrect]="previewIsCorrect" (answer)="answerPreviewQuestion($event)">
+        <div [ngSwitch]="previewQuestion.answerType">
+            <app-arrangement-answer-card *ngSwitchCase="'ARRANGEMENT'" [question]="previewQuestion" [isCorrect]="isPreviewCorrect" (answer)="answerPreviewQuestion($event)">
             </app-arrangement-answer-card>
-            <app-multi-choice-answer-card *ngSwitchCase="'MULTI_CHOICE'" [question]="previewQuestion" [isCorrect]="previewIsCorrect" (answer)="answerPreviewQuestion($event)">
+            <app-multi-choice-answer-card *ngSwitchCase="'MULTI_CHOICE'" [question]="previewQuestion" [isCorrect]="isPreviewCorrect"
+                (answer)="answerPreviewQuestion($event)">
             </app-multi-choice-answer-card>
-            <app-speech-answer-card *ngSwitchCase="'SPEECH'" [question]="previewQuestion" [isCorrect]="previewIsCorrect" (answer)="answerPreviewQuestion($event)">
+            <app-speech-answer-card *ngSwitchCase="'SPEECH'" [question]="previewQuestion" [isCorrect]="isPreviewCorrect" (answer)="answerPreviewQuestion($event)">
             </app-speech-answer-card>
-            <app-typing-answer-card *ngSwitchCase="'TYPING'" [question]="previewQuestion" [isCorrect]="previewIsCorrect" (answer)="answerPreviewQuestion($event)">
+            <app-typing-answer-card *ngSwitchCase="'TYPING'" [question]="previewQuestion" [isCorrect]="isPreviewCorrect" (answer)="answerPreviewQuestion($event)">
             </app-typing-answer-card>
         </div>
     </div>

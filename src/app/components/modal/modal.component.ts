@@ -28,6 +28,8 @@ export class ModalComponent implements OnChanges, AfterViewInit {
 
     @Input() customForm = false;
 
+    @Input() center = false;
+
     @Output() show = new EventEmitter();
 
     @Output() hide = new EventEmitter();
