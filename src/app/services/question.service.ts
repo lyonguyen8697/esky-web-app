@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { AuthenticationHttp } from './authentication-http.service';
 import { RequestUtils } from '../utils/request.utils';
 import { Question } from '../models/question.model';
+import { ItemMetadata } from '../models/item-metadata.model';
 
 import 'rxjs/add/operator/map';
 
@@ -15,6 +16,11 @@ export class QuestionService {
     apiUrl = '/api/questions';
 
     constructor(private authHttp: AuthenticationHttp) {}
+
+    search(key: string): Observable<ItemMetadata[]> {
+        return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl + '/search/' + key))
+            .map(res => res.json());
+    }
 
     getAll(): Observable<Question[]> {
         return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl))

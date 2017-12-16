@@ -1,7 +1,64 @@
 <nav class="navbar navbar-expand-sm navbar-light py-0" [class.bg-sky]="isSignedIn">
     <div class="container">
         <a class="navbar-brand" routerLink="/" routerLinkActive="active">eSky</a>
-        <div *ngIf="isSignedIn">
+        <div class="search-container mr-3" (clickOutside)="hideSearchPanel()">
+            <form class="search-form py-2" [hidden]="!isSignedIn">
+                <input type="search" name="searchKey" class="search-bar form-control" placeholder="Tìm kiếm" autocomplete="off" [(ngModel)]="searchKey"
+                    (ngModelChange)="search()" (focus)="showSearchPanel()" trim>
+            </form>
+            <div class="dropdown-panel search-panel bg-light rounded-bottom">
+                <div class="mb-2">
+                    <div class="text-center text-muted p-2" [hidden]="userItems?.length > 0 || lessonItems?.length > 0 || questionItems?.length > 0">
+                        <span [hidden]="searchKey.trim().length !== 0">Nhập mọi thứ có liên quan</span>
+                        <span [hidden]="searchKey.trim().length === 0">Không có kết quả nào</span>
+                    </div>
+                    <div class="row m-0">
+                        <div class="col-lg-6 p-0" id="large-block" [class.col-lg-12]="isOneColumn">
+                            <div id="user-items">
+                                <div class="search-panel-separator bg-dark text-white p-2" [hidden]="userItems?.length === 0">Người dùng</div>
+                                <div class="search-items">
+                                    <div *ngFor="let item of userItems">
+                                        <a routerLink="/{{item.caption}}" class="search-item text-dark nav-btn ellipsis d-block p-2" (click)="searchItemClicked()">
+                                            <img class="rounded-circle search-user-avatar" src="assets/icons/user.svg"
+                                            alt="Avatar" width="24" height="24">
+                                            <span>{{item.name}}</span>
+                                            <span class="text-muted">#{{item.caption}}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 p-0" id="small-block">
+                            <div id="lesson-items">
+                                <div class="search-panel-separator bg-dark text-white p-2" [hidden]="lessonItems?.length === 0">Bài học</div>
+                                <div class="search-items">
+                                    <div *ngFor="let item of lessonItems">
+                                        <a routerLink="creator/lesson/{{item.id}}" class="search-item text-dark nav-btn ellipsis d-block p-2" (click)="searchItemClicked()">
+                                            <i class="fas fa-book mr-1"></i>
+                                            <span>{{item.name}}</span>
+                                            <span class="text-muted">#{{item.caption}}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="question-items">
+                                <div class="search-panel-separator bg-dark text-white p-2" [hidden]="questionItems?.length === 0">Câu hỏi</div>
+                                <div class="search-items">
+                                    <div *ngFor="let item of questionItems">
+                                        <a routerLink="creator/question/{{item.id}}" class="search-item text-dark nav-btn ellipsis d-block p-2" (click)="searchItemClicked()">
+                                            <i class="fas fa-question-circle mr-1"></i>
+                                            <span>{{item.name}}</span>
+                                            <span class="text-muted">#{{item.caption | alias}}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div [hidden]="!isSignedIn">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false"
                 aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -20,16 +77,15 @@
                     <div class="user-menu-container navbar-item mx-3" (clickOutside)="hideMenu()">
                         <div class="nav-btn d-flex h-100" (click)="toggleMenu()">
                             <span class="m-auto pl-2 pr-1">
-                                <img class="rounded-circle" src="https://yt3.ggpht.com/-p9eRJnFCuSA/AAAAAAAAAAI/AAAAAAAAAAA/vv1wS4dO3GY/s88-c-k-no-mo-rj-c0xffffff/photo.jpg"
-                                    alt="Avatar" width="32" height="32">
+                                <img class="rounded-circle" src="assets/icons/user.svg" alt="Avatar" width="32" height="32">
                             </span>
                             <span class="m-auto pl-1 pr-2">
                                 {{user?.name}}
                             </span>
                         </div>
-                        <div class="user-menu bg-light rounded-bottom">
+                        <div class="dropdown-panel user-menu bg-light rounded-bottom">
                             <div class="my-2">
-                                <a (click)="gotoUserInfo()" class="nav-btn d-block px-3 py-2">
+                                <a (click)="gotoUserProfile()" class="nav-btn d-block px-3 py-2">
                                     <i class="fa fa-user-circle" aria-hidden="true"></i>
                                     <span class="px-2">Thông tin cá nhân</span>
                                 </a>

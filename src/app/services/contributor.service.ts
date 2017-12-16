@@ -11,6 +11,7 @@ import { Lesson } from '../models/lesson.model';
 import { Question } from '../models/question.model';
 import { Learner } from '../models/learner.model';
 import { LevelInfo } from '../models/level-info.model';
+import { ItemMetadata } from '../models/item-metadata.model';
 
 import 'rxjs/add/operator/map';
 import { LocalStorageService } from './local-storage.service';
@@ -22,6 +23,17 @@ export class ContributorService {
 
     constructor(private authHttp: AuthenticationHttp,
         private storage: LocalStorageService) { }
+
+    search(key: string): Observable<ItemMetadata[]> {
+        return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl + '/search/' + key))
+            .map(res => res.json());
+    }
+
+    appoint(id: string): Observable<boolean> {
+        return this.authHttp
+            .post(RequestUtils.getFullUrl(this.apiUrl), id)
+            .catch(error => Observable.of(error));
+    }
 
     insertLesson(note: string, lesson: Lesson, questions: Question[]): Observable<any> {
         return this.authHttp

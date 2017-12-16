@@ -8,6 +8,42 @@
     font-family: 'Pacifico', serif;
     font-size: 1.7rem;
 }
+.search-container {
+    position: relative;
+    flex-grow: 1;
+    user-select: none;
+}
+.search-bar {
+    /*transition: width 1s;*/
+    width: 200px;
+}/*
+.search-bar:focus {
+    width: 100%;
+}*/
+@media (max-width: 769px) {
+    .search-bar {
+        display: none;
+    }
+}
+.search-panel {
+    width: 100%;
+    left: 0;
+}
+.search-panel-separator {
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+.search-items {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.search-item {
+    text-decoration: none;
+    cursor: pointer;
+}
+.search-user-avatar {
+    vertical-align: -0.4rem;
+}
 .user-menu-container {
     position: relative;
     color: inherit;
@@ -23,11 +59,18 @@
     cursor: pointer;
 }
 .user-menu {
+    width: 210px;
+    right: 0;
+}
+.dropdown-panel {
     display: none;
     position: absolute;
-    width: 210px;
     top: 100%;
-    right: 0;
     z-index: 999;
     box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.4);
 }
+.ellipsis {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }

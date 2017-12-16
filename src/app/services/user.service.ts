@@ -12,6 +12,7 @@ import { RequestUtils } from '../utils/request.utils';
 import { User } from '../models/user.model';
 import { SignUpInfo } from '../models/sign-up-info.model';
 import { UserUpdateInfo } from '../models/user-update-info.model';
+import { ItemMetadata } from '../models/item-metadata.model';
 
 @Injectable()
 export class UserService {
@@ -24,6 +25,11 @@ export class UserService {
                 private storage: LocalStorageService,
                 private encrypt: EncryptService) {}
 
+    search(key: string): Observable<ItemMetadata[]> {
+        return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl + '/search/' + key))
+            .map(res => res.json());
+    }
+
     get(): Observable<User> {
         return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl))
         .map(res => {
@@ -33,8 +39,13 @@ export class UserService {
         });
     }
 
+    getById(id: string): Observable<User> {
+        return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl + '/' + id))
+        .map(res => res.json());
+    }
+
     getByUsername(username: string): Observable<User> {
-        return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl + '/' + username))
+        return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl + '/username/' + username))
         .map(res => res.json());
     }
 
@@ -80,6 +91,22 @@ export class UserService {
         credentials = this.encrypt.encryptPassword(credentials);
         return this.authHttp
         .put(RequestUtils.getFullUrl(this.apiUrl + '/password'), { password: password, credentials: credentials});
+    }
+
+    updateAccountUsername(id: string, username: string): Observable<any> {
+        return this.authHttp
+        .put(RequestUtils.getFullUrl(this.apiUrl + '/' + id + '/username'), username);
+    }
+
+    updateAccountName(id: string, name: string): Observable<any> {
+        return this.authHttp
+        .put(RequestUtils.getFullUrl(this.apiUrl + '/' + id + '/name'), name);
+    }
+
+    updateAccountPassword(id: string, password: string): Observable<any> {
+        password = this.encrypt.encryptPassword(password);
+        return this.authHttp
+        .put(RequestUtils.getFullUrl(this.apiUrl + '/' + id + '/password'), password);
     }
 
 }

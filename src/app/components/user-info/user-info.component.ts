@@ -8,10 +8,14 @@ import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import 'rxjs/add/operator/debounceTime';
 
 import { UserService } from '../../services/user.service';
+import { ContributorService } from '../../services/contributor.service';
+import { ManagerService } from '../../services/manager.service';
 import { UserInfoValidatorService } from '../../services/user-info-validator.service';
+import { LocalStorageService } from '../../services/local-storage.service';
 import { ModalService } from '../../services/modal.service';
 import { TooltipService } from '../../services/tooltip.service';
 import { User } from '../../models/user.model';
+import { Role } from '../../enums/role.emum';
 
 declare var $: any;
 
@@ -28,6 +32,8 @@ export class UserInfoComponent implements OnInit {
 
     editable: boolean;
 
+    appointable: boolean;
+
     editing = false;
 
     updateCount = 0;
@@ -42,7 +48,15 @@ export class UserInfoComponent implements OnInit {
 
     tooltipDelay = 50;
 
-    modalName = 'confirmPasswordModal';
+    passwordConfirmModal = 'confirmPasswordModal';
+
+    confirmModal = 'confirmModal';
+
+    confirmOk: Function;
+
+    confirmCancel: Function;
+
+    confirmContent: string;
 
     keydown = new EventEmitter<string>();
 
@@ -79,22 +93,26 @@ export class UserInfoComponent implements OnInit {
     }
 
     constructor(private route: ActivatedRoute,
-                private fb: FormBuilder,
-                private location: Location,
-                private userService: UserService,
-                private validator: UserInfoValidatorService,
-                private modal: ModalService,
-                private tooltip: TooltipService) { }
+        private fb: FormBuilder,
+        private location: Location,
+        private userService: UserService,
+        private contributorService: ContributorService,
+        private managerService: ManagerService,
+        private validator: UserInfoValidatorService,
+        private local: LocalStorageService,
+        private modal: ModalService,
+        private tooltip: TooltipService) { }
 
     ngOnInit() {
-        this.editable = true;
         this.editing = false;
         this.route.data
-        .subscribe(data => {
-            this.user = data.user;
-            this.createForm();
-            this.registerKeydown();
-        });
+            .subscribe(data => {
+                this.user = data.user;
+                this.editable = this.canEdit();
+                this.appointable = this.canAppoint();
+                this.createForm();
+                this.registerKeydown();
+            });
     }
 
     resetForm() {
@@ -108,21 +126,21 @@ export class UserInfoComponent implements OnInit {
 
     registerKeydown() {
         Object.keys(this.form.controls)
-        .forEach(key => {
-            const control = this.form.get(key);
-            control.valueChanges
-            .subscribe(() => {
-                control.markAsPristine();
+            .forEach(key => {
+                const control = this.form.get(key);
+                control.valueChanges
+                    .subscribe(() => {
+                        control.markAsPristine();
+                    });
             });
-        });
         this.keydown
-        .do(() => this.hideAllTooltip())
-        .debounceTime(this.hideInvalidDelay)
-        .subscribe(key => {
-            const control = this.form.get(key);
-            control.markAsDirty();
-            this.showTooltip(key, this.tooltipDelay);
-        });
+            .do(() => this.hideAllTooltip())
+            .debounceTime(this.hideInvalidDelay)
+            .subscribe(key => {
+                const control = this.form.get(key);
+                control.markAsDirty();
+                this.showTooltip(key, this.tooltipDelay);
+            });
     }
 
     onKeydown(control: string) {
@@ -133,20 +151,20 @@ export class UserInfoComponent implements OnInit {
         if (this.isUsernameChange) {
             this.updateCount++;
             this.userService.updateUsername(this.username.value, this.credentials.value)
-            .finally(this.updateComplete.bind(this))
-            .subscribe({error: error => this.updateError(error, this.username)});
+                .finally(this.updateComplete.bind(this))
+                .subscribe({ error: error => this.updateError(error, this.username) });
         }
         if (this.isNameChange) {
             this.updateCount++;
             this.userService.updateName(this.name.value, this.credentials.value)
-            .finally(this.updateComplete.bind(this))
-            .subscribe({error: error => this.updateError(error, this.name)});
+                .finally(this.updateComplete.bind(this))
+                .subscribe({ error: error => this.updateError(error, this.name) });
         }
         if (this.isPasswordChange) {
             this.updateCount++;
             this.userService.updatePassword(this.password.value, this.credentials.value)
-            .finally(this.updateComplete.bind(this))
-            .subscribe({error: error => this.updateError(error, this.password)});
+                .finally(this.updateComplete.bind(this))
+                .subscribe({ error: error => this.updateError(error, this.password) });
         }
         this.submitted = true;
         this.serverError = '';
@@ -157,7 +175,7 @@ export class UserInfoComponent implements OnInit {
         if (error.code === 16) {
             this.serverError = 'Sai mật khẩu';
         } else {
-            control.setErrors({ 'server': 'error'});
+            control.setErrors({ 'server': 'error' });
         }
     }
 
@@ -170,21 +188,22 @@ export class UserInfoComponent implements OnInit {
         if (this.serverError) {
             return;
         }
-        this.hideModal();
+        this.hideModal(this.passwordConfirmModal);
         if (this.form.valid) {
-            this.updateSuccess();
+            this.updateSelfSuccess();
         } else {
             this.showAllTooltip();
         }
     }
 
-    updateSuccess() {
+    updateSelfSuccess() {
         this.userService.get()
-        .subscribe(user => {
-            this.user = user;
-            this.cancelEdit();
-            this.updateUrl();
-        });
+            .subscribe(user => {
+                this.user = user;
+                this.cancelEdit();
+                this.updateUrl();
+                this.username.setAsyncValidators(this.validator.usernameExists(this.hideInvalidDelay, this.user.username));
+            });
     }
 
     updateUrl() {
@@ -204,8 +223,72 @@ export class UserInfoComponent implements OnInit {
     }
 
     save() {
-        this.credentials.enable();
-        this.showModal();
+        if (this.user.id === this.local.getUser().id) {
+            this.credentials.enable();
+            this.showModal(this.passwordConfirmModal);
+        } else {
+            if (this.isUsernameChange) {
+                this.userService.updateAccountUsername(this.user.id, this.username.value)
+                    .subscribe(() => this.updateSuccess());
+            }
+            if (this.isNameChange) {
+                this.userService.updateAccountName(this.user.id, this.name.value)
+                    .subscribe(() => this.updateSuccess());
+            }
+            if (this.isPasswordChange) {
+                this.userService.updateAccountPassword(this.user.id, this.password.value)
+                    .subscribe(() => this.updateSuccess());
+            }
+        }
+    }
+
+    updateSuccess() {
+        this.userService.getById(this.user.id)
+            .subscribe(user => {
+                this.user = user;
+                this.cancelEdit();
+                this.updateUrl();
+                this.username.setAsyncValidators(this.validator.usernameExists(this.hideInvalidDelay, this.user.username));
+            });
+    }
+
+    appoint() {
+        if (this.appointable && !this.editing) {
+            if (this.user.role === 'LEARNER') {
+                this.confirm({
+                    content: `Bạn có muốn bổ nhiệm ${this.user.name} thành Cộng tác viên`,
+                    ok: () => {
+                        this.hideModal(this.confirmModal);
+                        this.contributorService.appoint(this.user.id)
+                            .subscribe(res => {
+                                this.userService.getById(this.user.id)
+                                .subscribe(user => {
+                                    this.user = user;
+                                    this.appointable = this.canAppoint();
+                                });
+                            });
+                    },
+                    cancel: () => this.hideModal(this.confirmModal)
+                });
+            }
+            if (this.user.role === 'CONTRIBUTOR') {
+                this.confirm({
+                    content: `Bạn có muốn bổ nhiệm ${this.user.name} thành Quản trị viên`,
+                    ok: () => {
+                        this.hideModal(this.confirmModal);
+                        this.managerService.appoint(this.user.id)
+                            .subscribe(res => {
+                                this.userService.getById(this.user.id)
+                                .subscribe(user => {
+                                    this.user = user;
+                                    this.appointable = this.canAppoint();
+                                });
+                            });
+                    },
+                    cancel: () => this.hideModal(this.confirmModal)
+                });
+            }
+        }
     }
 
     modalHided() {
@@ -226,12 +309,12 @@ export class UserInfoComponent implements OnInit {
         this.password.disable();
     }
 
-    showModal() {
-        this.modal.show(this.modalName);
+    showModal(modal: string) {
+        this.modal.show(modal);
     }
 
-    hideModal() {
-        this.modal.hide(this.modalName);
+    hideModal(modal: string) {
+        this.modal.hide(modal);
     }
 
     showTooltip(name: string, delay = 0) {
@@ -257,20 +340,20 @@ export class UserInfoComponent implements OnInit {
     createForm() {
         this.form = this.fb.group({
             username: this.fb.control(
-                { value: this.user.username, disabled: true},
+                { value: this.user.username, disabled: true },
                 Validators.compose([Validators.required, Validators.pattern(this.validator.usernameRegex)]),
                 this.validator.usernameExists(this.hideInvalidDelay, this.user.username)
             ),
             name: this.fb.control(
-                { value: this.user.name, disabled: true},
+                { value: this.user.name, disabled: true },
                 Validators.required
             ),
             password: this.fb.control(
-                { value: '******', disabled: true},
+                { value: '******', disabled: true },
                 Validators.compose([Validators.required, Validators.minLength(6)])
             ),
             credentials: this.fb.control(
-                { value: '', disabled: true},
+                { value: '', disabled: true },
                 Validators.required
             )
         });
@@ -288,6 +371,37 @@ export class UserInfoComponent implements OnInit {
         if (this.password.pristine) {
             this.password.setValue('');
         }
+    }
+
+    canEdit(): boolean {
+        const currentUser = this.local.getUser();
+        if (this.user.id === currentUser.id) {
+            return true;
+        }
+        const currentRole = Role[this.local.getUser().role];
+        const userRole = Role[this.user.role];
+        if (currentRole > Role.CONTRIBUTOR && currentRole > userRole) {
+            return true;
+        }
+        return false;
+    }
+
+    confirm(option: { content, ok: Function, cancel: Function }) {
+        this.confirmContent = option.content;
+        this.confirmOk = option.ok;
+        this.confirmCancel = option.cancel;
+        this.showModal(this.confirmModal);
+    }
+
+    canAppoint(): boolean {
+        const currentRole = Role[this.local.getUser().role];
+        const userRole = Role[this.user.role];
+        if (currentRole === Role.MANAGER && userRole === Role.LEARNER) {
+            return true;
+        } else if (currentRole === Role.ADMIN && (userRole === Role.LEARNER || userRole === Role.CONTRIBUTOR)) {
+            return true;
+        }
+        return false;
     }
 
 }

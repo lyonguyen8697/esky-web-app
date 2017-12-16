@@ -15,7 +15,7 @@ export class UserInfoValidatorService {
 
     usernameRegex = /^[A-Za-z0-9]+(?:[_-][A-Za-z0-9]+)*$/;
 
-    constructor(private user: UserService) {}
+    constructor(private user: UserService) { }
 
     async validate(info: any): Promise<boolean> {
         const a = await info.email !== undefined ? this.email(info).toPromise() : true;
@@ -24,7 +24,7 @@ export class UserInfoValidatorService {
         const d = info.password !== undefined ? this.password(info) : true;
         const e = info.confirmPass !== undefined ? this.confirmPassword(info) : true;
         return Promise.all([a, b, c, d, e])
-        .then(value => value.every(n => n));
+            .then(value => value.every(n => n));
     }
 
     isEmpty(s: string): boolean {
@@ -42,17 +42,17 @@ export class UserInfoValidatorService {
             return Observable.of(false);
         }
         return this.user.hasEmailOrUsername(info.email)
-        .map(isExists => {
-            if (isExists) {
-                info.emailError = true;
-                info.emailErrorMess = 'Email bạn nhập đã tồn tại';
-                return false;
-            } else {
-                info.emailError = false;
-                info.emailErrorMess = '';
-                return true;
-            }
-        });
+            .map(isExists => {
+                if (isExists) {
+                    info.emailError = true;
+                    info.emailErrorMess = 'Email bạn nhập đã tồn tại';
+                    return false;
+                } else {
+                    info.emailError = false;
+                    info.emailErrorMess = '';
+                    return true;
+                }
+            });
     }
 
     username(info: { currentUsername: string, username: string, usernameError: boolean, usernameErrorMess: string }): Observable<boolean> {
@@ -70,17 +70,17 @@ export class UserInfoValidatorService {
             return Observable.of(true);
         }
         return this.user.hasEmailOrUsername(info.username)
-        .map(isExists => {
-            if (isExists) {
-                info.usernameError = true;
-                info.usernameErrorMess = 'Tên người dùng đã tồn tại';
-                return false;
-            } else {
-                info.usernameError = false;
-                info.usernameErrorMess = '';
-                return true;
-            }
-        });
+            .map(isExists => {
+                if (isExists) {
+                    info.usernameError = true;
+                    info.usernameErrorMess = 'Tên người dùng đã tồn tại';
+                    return false;
+                } else {
+                    info.usernameError = false;
+                    info.usernameErrorMess = '';
+                    return true;
+                }
+            });
     }
 
     name(info: { name: string, nameError: boolean, nameErrorMess: string }): boolean {
@@ -128,24 +128,24 @@ export class UserInfoValidatorService {
     }
 
     usernameExists(debounceTime: number, except?: string): AsyncValidatorFn {
-        return (control: AbstractControl): Observable<{[key: string]: any}> => {
+        return (control: AbstractControl): Observable<{ [key: string]: any }> => {
             if (except && except.trim().toLowerCase() === control.value.trim().toLowerCase()) {
                 return Observable.of(null);
             }
             return this.user.hasEmailOrUsername(control.value)
-            .debounceTime(debounceTime)
-            .map(exists => exists ? {'exists': {value: control.value}} : null);
+                .debounceTime(debounceTime)
+                .map(exists => exists ? { 'exists': { value: control.value } } : null);
         };
     }
 
     emailExists(debounceTime: number, except?: string): AsyncValidatorFn {
-        return (control: AbstractControl): Observable<{[key: string]: any}> => {
+        return (control: AbstractControl): Observable<{ [key: string]: any }> => {
             if (except && except.trim().toLowerCase() === control.value.trim().toLowerCase()) {
                 return Observable.of(null);
             }
             return this.user.hasEmailOrUsername(control.value)
-            .debounceTime(debounceTime)
-            .map(exists => exists ? {'exists': {value: control.value}} : null);
+                .debounceTime(debounceTime)
+                .map(exists => exists ? { 'exists': { value: control.value } } : null);
         };
     }
 

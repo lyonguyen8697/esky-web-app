@@ -23,3 +23,17 @@
     top: 11px;
     right: 11px;
 }
+.icon-manager {
+    font-size: 1.1em;
+    vertical-align: -0.05em;
+}
+.icon-crown {
+    width: 1.2em;
+    height: 1.2em;
+    vertical-align: -0.125em;
+}
+.btn-appoint {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}

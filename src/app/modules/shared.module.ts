@@ -17,6 +17,7 @@ import { ProgressbarComponent } from '../components/progressbar/progressbar.comp
 import { LocalStorageService } from '../services/local-storage.service';
 import { UserService } from '../services/user.service';
 import { LearnerService } from '../services/learner.service';
+import { ManagerService } from '../services/manager.service';
 import { EncryptService } from '../services/encrypt.service';
 import { ModalService } from '../services/modal.service';
 import { TooltipService } from '../services/tooltip.service';
@@ -69,6 +70,7 @@ import { AliasPipe } from '../pipes/alias.pipe';
         ModalService,
         TooltipService,
         LearnerService,
+        ManagerService,
         EncryptService
     ]
 })

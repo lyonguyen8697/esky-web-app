@@ -12,6 +12,7 @@ import { HomeModule } from './modules/home.module';
 import { StudyModule } from './modules/study.module';
 import { LibraryModule } from './modules/library.module';
 import { CreatorModule } from './modules/creator.module';
+import { SharedModule } from './modules/shared.module';
 
 import { AppComponent } from './app.component';
 import { NgProgressModule, NgProgressBrowserXhr } from 'ngx-progressbar';
@@ -40,7 +41,8 @@ import { ClickOutsideDirective } from './directives/click-outside.directive';
     CreatorModule,
     AppRoutingModule,
     UserModule,
-    AuthenticationModule
+    AuthenticationModule,
+    SharedModule
   ],
   providers: [
     { provide: BrowserXhr, useClass: NgProgressBrowserXhr }

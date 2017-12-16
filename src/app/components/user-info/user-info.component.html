@@ -1,16 +1,28 @@
 <div class="container">
     <div class="card card-shadow">
-        <div class="card-body p-3 p-sm-5">
+        <div class="card-body p-3 p-sm-5 position-relative">
             <div class="text-center mb-4">
                 <div class="user-avatar mb-2">
-                    <img class="rounded-circle" src="https://yt3.ggpht.com/-p9eRJnFCuSA/AAAAAAAAAAI/AAAAAAAAAAA/vv1wS4dO3GY/s88-c-k-no-mo-rj-c0xffffff/photo.jpg"
-                        alt="Avatar">
+                    <img class="rounded-circle" src="assets/icons/user.svg"
+                        alt="Avatar" width="128" height="128">
                 </div>
                 <div class="user-name">
                     {{user.name}}
                 </div>
                 <div class="user-role text-muted">
-                    {{user.role | titlecase}}
+                    <span [hidden]="user.role !== 'LEARNER'">
+                        <i class="fas fa-graduation-cap text-primary"></i>
+                    </span>
+                    <span [hidden]="user.role !== 'CONTRIBUTOR'">
+                        <i class="fas fa-star text-warning"></i>
+                    </span>
+                    <span [hidden]="user.role !== 'MANAGER'" class="icon-manager">
+                        <i class="fab fa-black-tie text-dark"></i>
+                    </span>
+                    <span [hidden]="user.role !== 'ADMIN'" class="mr-1">
+                        <img src="assets/icons/crown.svg" alt="crown" class="icon-crown">
+                    </span>
+                    {{user.role | alias}}
                 </div>
             </div>
             <div class="user-panel mr-md-5">
@@ -19,23 +31,18 @@
                     <div class="form-group row">
                         <label class="col-sm-4 col-form-label" for="email">Email</label>
                         <div class="col-sm-8">
-                            <input type="email" id="email" class="form-control-plaintext" readonly
-                            [value]="user.email">
+                            <input type="email" id="email" class="form-control-plaintext" readonly [value]="user.email">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-4 col-form-label" for="username">Username</label>
                         <div class="col-sm-8">
                             <div class="position-relative">
-                                <input type="text" id="username" class="form-control" placeholder="Tên người dùng"
-                                formControlName="username"
-                                (keydown)="onKeydown('username')"
-                                (blur)="hideAllTooltip()"
-                                [class.form-control]="editable"
-                                [class.is-invalid]="isInvalid(username)">
+                                <input type="text" id="username" placeholder="Tên người dùng" formControlName="username" (keydown)="onKeydown('username')"
+                                    (blur)="hideAllTooltip()" [class.form-control]="editable" [class.form-control-plaintext]="!editable"
+                                    [class.is-invalid]="isInvalid(username)">
                                 <div class="tooltip-wrap tooltip-username" [hidden]="!isInvalid(username)">
-                                    <app-tooltip [title]="getErrorMessage('Tên người dùng', username)" 
-                                    [isError]="isInvalid(username)"></app-tooltip>
+                                    <app-tooltip [title]="getErrorMessage('Tên người dùng', username)" [isError]="isInvalid(username)"></app-tooltip>
                                 </div>
                             </div>
                         </div>
@@ -44,15 +51,10 @@
                         <label class="col-sm-4 col-form-label" for="name">Full name</label>
                         <div class="col-sm-8">
                             <div class="position-relative">
-                                <input type="text" name="name" id="name" class="form-control" placeholder="Họ tên"
-                                formControlName="name"
-                                (keydown)="onKeydown('name')"
-                                (blur)="hideAllTooltip()"
-                                [class.form-control]="editable"
-                                [class.is-invalid]="isInvalid(name)">
+                                <input type="text" name="name" id="name" placeholder="Họ tên" formControlName="name" (keydown)="onKeydown('name')" (blur)="hideAllTooltip()"
+                                    [class.form-control]="editable" [class.form-control-plaintext]="!editable" [class.is-invalid]="isInvalid(name)">
                                 <div class="tooltip-wrap tooltip-name" [hidden]="!isInvalid(name)">
-                                    <app-tooltip [title]="getErrorMessage('Tên', name)" 
-                                    [isError]="isInvalid(name)"></app-tooltip>
+                                    <app-tooltip [title]="getErrorMessage('Tên', name)" [isError]="isInvalid(name)"></app-tooltip>
                                 </div>
                             </div>
                         </div>
@@ -61,43 +63,40 @@
                         <label class="col-sm-4 col-form-label" for="password">Password</label>
                         <div class="col-sm-8">
                             <div class="position-relative">
-                                <input type="password" id="password" class="form-control" placeholder="Mật khẩu mới"
-                                formControlName="password"
-                                (click)="onPasswordFocus()"
-                                (keydown)="onKeydown('password')"
-                                (blur)="hideAllTooltip()"
-                                [class.form-control]="editable"
-                                [class.is-invalid]="isInvalid(password)">
+                                <input type="password" id="password" class="form-control" placeholder="Mật khẩu mới" formControlName="password" (click)="onPasswordFocus()"
+                                    (keydown)="onKeydown('password')" (blur)="hideAllTooltip()" [class.is-invalid]="isInvalid(password)">
                                 <div class="tooltip-wrap tooltip-password" [hidden]="!isInvalid(password)">
-                                    <app-tooltip [title]="getErrorMessage('Mật khẩu', password)" 
-                                    [isError]="isInvalid(password)"></app-tooltip>
+                                    <app-tooltip [title]="getErrorMessage('Mật khẩu', password)" [isError]="isInvalid(password)"></app-tooltip>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div *ngIf="!editing; else editCase" class="d-flex justify-content-end">
-                        <button type="button" class="btn btn-warning" (click)="edit()">Chỉnh sửa</button>
+                        <button type="button" class="btn btn-warning" (click)="edit()" [hidden]="!editable">
+                            <i class="fas fa-edit mr-1"></i>
+                            Chỉnh sửa
+                        </button>
                     </div>
                     <ng-template #editCase>
                         <div class="d-flex justify-content-end">
-                            <button type="button" class="btn btn-secondary ml-2" (click)="cancelEdit()">Hủy bỏ</button>
-                            <button type="button" class="btn btn-primary ml-2"
-                            (click)="save()"
-                            [disabled]="form.invalid || !isFormChanges">Lưu</button>
+                            <button type="button" class="btn btn-secondary ml-2" (click)="cancelEdit()">
+                                <i class="fas fa-ban mr-1"></i>
+                                Hủy bỏ
+                            </button>
+                            <button type="button" class="btn btn-primary ml-2" (click)="save()" [disabled]="form.invalid || !isFormChanges">
+                                <i class="fas fa-save mr-1"></i>
+                                Lưu
+                            </button>
                         </div>
-                        <app-modal [modal]="modalName" [title]="'Xác nhận mật khẩu của bạn để tiếp tục'" (hide)="modalHided()">
+                        <app-modal [modal]="passwordConfirmModal" title="Xác nhận mật khẩu của bạn để tiếp tục" (hide)="modalHided(passwordConfirmModal)">
                             <div class="form-group">
                                 <label for="credentials">Mật khẩu</label>
                                 <div class="position-relative">
-                                    <input type="password" id="credentials" class="form-control" placeholder="Mật khẩu của bạn"
-                                    formControlName="credentials"
-                                    (keydown)="onKeydown('credentials')"
-                                    (keydown.enter)="submit()"
-                                    (blur)="hideAllTooltip()"
-                                    [class.is-invalid]="isInvalid(credentials)">
+                                    <input type="password" id="credentials" class="form-control" placeholder="Mật khẩu của bạn" formControlName="credentials"
+                                        (keydown)="onKeydown('credentials')" (keydown.enter)="submit()" (blur)="hideAllTooltip()"
+                                        [class.is-invalid]="isInvalid(credentials)">
                                     <div class="tooltip-wrap tooltip-credentials" [hidden]="!isInvalid(credentials)">
-                                        <app-tooltip [title]="getErrorMessage('Mật khẩu', credentials)" 
-                                        [isError]="isInvalid(credentials)"></app-tooltip>
+                                        <app-tooltip [title]="getErrorMessage('Mật khẩu', credentials)" [isError]="isInvalid(credentials)"></app-tooltip>
                                     </div>
                                 </div>
                             </div>
@@ -105,9 +104,8 @@
                                 <div class="w-100 align-self-center text-danger" [hidden]="!serverError">
                                     Lỗi: {{serverError}}
                                 </div>
-                                <button type="button" class="btn btn-secondary ml-2" (click)="hideModal()">Trở lại</button>
-                                <button type="button" class="btn btn-primary ml-2" (click)="submit()"
-                                [disabled]="credentials.invalid || submitted">
+                                <button type="button" class="btn btn-secondary ml-2" (click)="hideModal(passwordConfirmModal)">Trở lại</button>
+                                <button type="button" class="btn btn-primary ml-2" (click)="submit()" [disabled]="credentials.invalid || submitted">
                                     Xác nhận
                                 </button>
                             </div>
@@ -115,6 +113,21 @@
                     </ng-template>
                 </form>
             </div>
+            <button type="button" class="btn btn-success btn-appoint" [hidden]="!appointable || editing" (click)="appoint()">
+                <i class="far fa-hand-point-up mr-1"></i>
+                Bổ nhiệm
+            </button>
         </div>
     </div>
 </div>
+<app-modal [modal]="confirmModal" [title]="'Thông báo'">
+    <p>{{confirmContent}}</p>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary ml-2" (click)="confirmOk()">
+            Đồng ý
+        </button>
+        <button type="button" class="btn btn-secondary ml-2" (click)="confirmCancel(confirmModal)">
+            Quay lại
+        </button>
+    </div>
+</app-modal>
