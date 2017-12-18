@@ -16,6 +16,8 @@ export class QuestionCardComponent implements OnChanges {
 
     @Input() creatorButton = true;
 
+    @Input() autoSpeech = true;
+
     @Output() skip = new EventEmitter();
 
     @Output() creator = new EventEmitter();
@@ -24,7 +26,9 @@ export class QuestionCardComponent implements OnChanges {
 
     ngOnChanges() {
         this.speechService.cancelSpeak();
-        setTimeout(() => this.speak(), 200);
+        if (this.autoSpeech) {
+            setTimeout(() => this.speak(), 200);
+        }
     }
 
     speak() {

@@ -1,6 +1,7 @@
 import { Headers } from '@angular/http';
 
 import { User } from '../models/user.model';
+import { Log } from '../models/log.model';
 
 export class RequestUtils {
 
@@ -34,5 +35,45 @@ export class RequestUtils {
             return `Bearer ${user.token}`;
         }
         return '';
+    }
+
+    static mapQuestionLog(res: any): Log {
+        return {
+            id: res.log_id,
+            contributor: res.contributor,
+            time: new Date(res.time),
+            method: res.method,
+            note: res.note,
+            accepted: res.accepted,
+            question: {
+                id: res.id,
+                question: res.question,
+                phrase: res.phrase,
+                voice: res.voice,
+                picture: res.picture,
+                answerType: res.answerType,
+                answers: res.answers,
+                choices: res.choices,
+                difficulty: res.difficulty
+            }
+        };
+    }
+
+    static mapLessonLog(res: any): Log {
+        return {
+            id: res.log_id,
+            contributor: res.contributor,
+            time: new Date(res.time),
+            method: res.method,
+            note: res.note,
+            accepted: res.accepted,
+            lesson: {
+                id: res.id,
+                subject: res.subject,
+                title: res.title,
+                description: res.description,
+                level: res.level
+            }
+        };
     }
 }

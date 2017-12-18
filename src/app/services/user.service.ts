@@ -20,48 +20,53 @@ export class UserService {
     apiUrl = 'api/accounts';
 
     constructor(private http: Http,
-                private authHttp: AuthenticationHttp,
-                private router: Router,
-                private storage: LocalStorageService,
-                private encrypt: EncryptService) {}
+        private authHttp: AuthenticationHttp,
+        private router: Router,
+        private storage: LocalStorageService,
+        private encrypt: EncryptService) { }
 
     search(key: string): Observable<ItemMetadata[]> {
         return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl + '/search/' + key))
             .map(res => res.json());
     }
 
-    get(): Observable<User> {
+    getAll(): Observable<User[]> {
         return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl))
-        .map(res => {
-            const user: User = res.json();
-            this.storage.setUser(user);
-            return user;
-        });
+            .map(res => res.json());
+    }
+
+    get(): Observable<User> {
+        return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl + '/current'))
+            .map(res => {
+                const user: User = res.json();
+                this.storage.setUser(user);
+                return user;
+            });
     }
 
     getById(id: string): Observable<User> {
         return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl + '/' + id))
-        .map(res => res.json());
+            .map(res => res.json());
     }
 
     getByUsername(username: string): Observable<User> {
         return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl + '/username/' + username))
-        .map(res => res.json());
+            .map(res => res.json());
     }
 
     hasEmailOrUsername(emailOrUsername: string): Observable<boolean> {
         return this.http.head(RequestUtils.getFullUrl('api/accounts/' + emailOrUsername))
-        .mapTo(true)
-        .catch(() => Observable.of(false));
+            .mapTo(true)
+            .catch(() => Observable.of(false));
     }
 
     signUp(info: SignUpInfo, handler?: Function) {
         info.password = this.encrypt.encryptPassword(info.password);
-        this.http.post(RequestUtils.getFullUrl('api/accounts'), info)
-        .subscribe(
+        this.http.post(RequestUtils.getFullUrl('api/accounts'), info.prime)
+            .subscribe(
             res => this.signUpSucess(res),
             res => this.signUpError(res, handler)
-        );
+            );
     }
 
     signUpSucess(res) {
@@ -77,36 +82,46 @@ export class UserService {
     updateUsername(username: string, credentials: string): Observable<any> {
         credentials = this.encrypt.encryptPassword(credentials);
         return this.authHttp
-        .put(RequestUtils.getFullUrl(this.apiUrl + '/username'), { username: username, credentials: credentials});
+            .put(RequestUtils.getFullUrl(this.apiUrl + '/username'), { username: username, credentials: credentials });
     }
 
     updateName(name: string, credentials: string): Observable<any> {
         credentials = this.encrypt.encryptPassword(credentials);
         return this.authHttp
-        .put(RequestUtils.getFullUrl(this.apiUrl + '/name'), { name: name, credentials: credentials});
+            .put(RequestUtils.getFullUrl(this.apiUrl + '/name'), { name: name, credentials: credentials });
     }
 
     updatePassword(password: string, credentials: string): Observable<any> {
         password = this.encrypt.encryptPassword(password);
         credentials = this.encrypt.encryptPassword(credentials);
         return this.authHttp
-        .put(RequestUtils.getFullUrl(this.apiUrl + '/password'), { password: password, credentials: credentials});
+            .put(RequestUtils.getFullUrl(this.apiUrl + '/password'), { password: password, credentials: credentials });
     }
 
     updateAccountUsername(id: string, username: string): Observable<any> {
         return this.authHttp
-        .put(RequestUtils.getFullUrl(this.apiUrl + '/' + id + '/username'), username);
+            .put(RequestUtils.getFullUrl(this.apiUrl + '/' + id + '/username'), username);
     }
 
     updateAccountName(id: string, name: string): Observable<any> {
         return this.authHttp
-        .put(RequestUtils.getFullUrl(this.apiUrl + '/' + id + '/name'), name);
+            .put(RequestUtils.getFullUrl(this.apiUrl + '/' + id + '/name'), name);
     }
 
     updateAccountPassword(id: string, password: string): Observable<any> {
         password = this.encrypt.encryptPassword(password);
         return this.authHttp
-        .put(RequestUtils.getFullUrl(this.apiUrl + '/' + id + '/password'), password);
+            .put(RequestUtils.getFullUrl(this.apiUrl + '/' + id + '/password'), password);
+    }
+
+    block(id: string): Observable<any> {
+        return this.authHttp.delete(RequestUtils.getFullUrl(this.apiUrl + '/' + id))
+            .catch(error => Observable.of(error.json()));
+    }
+
+    restore(id: string): Observable<any> {
+        return this.authHttp.post(RequestUtils.getFullUrl(this.apiUrl + '/' + id), null)
+            .catch(error => Observable.of(error.json()));
     }
 
 }

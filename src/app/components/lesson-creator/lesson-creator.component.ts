@@ -237,13 +237,15 @@ export class LessonCreatorComponent implements OnInit {
     create() {
         if (this.isCreate && this.isFormChanged && this.isFormValid) {
             this.contributor.insertLesson(this.note.value, this.serialize(), this.editingQuestions)
-                .subscribe(res => {
-                    if (res.status === 200) {
-                        this.serverError = '';
-                    } else {
-                        this.serverError = res.message;
-                    }
+                .finally(() => {
                     this.showModal(this.responseModal);
+                })
+                .subscribe(
+                () => {
+                    this.serverError = '';
+                },
+                (error) => {
+                    this.serverError = error.message;
                 });
             this.submitting = true;
             this.disableForm();
@@ -253,13 +255,15 @@ export class LessonCreatorComponent implements OnInit {
     save() {
         if (!this.isCreate && this.isFormChanged && this.isFormValid) {
             this.contributor.updateLesson(this.note.value, this.serialize(), this.editingQuestions)
-                .subscribe(res => {
-                    if (res.status === 200) {
-                        this.serverError = '';
-                    } else {
-                        this.serverError = res.message;
-                    }
+                .finally(() => {
                     this.showModal(this.responseModal);
+                })
+                .subscribe(
+                () => {
+                    this.serverError = '';
+                },
+                (error) => {
+                    this.serverError = error.message;
                 });
             this.submitting = true;
             this.disableForm();
@@ -270,13 +274,15 @@ export class LessonCreatorComponent implements OnInit {
         this.hideModal(this.deleteModal);
         if (!this.isCreate) {
             this.contributor.deleteLesson(this.deleteNote, this.lesson.id)
-                .subscribe(res => {
-                    if (res.status === 200) {
-                        this.serverError = '';
-                    } else {
-                        this.serverError = res.message;
-                    }
+                .finally(() => {
                     this.showModal(this.responseModal);
+                })
+                .subscribe(
+                () => {
+                    this.serverError = '';
+                },
+                (error) => {
+                    this.serverError = error.message;
                 });
         }
     }

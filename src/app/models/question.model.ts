@@ -10,4 +10,5 @@ export interface Question {
     answers: string[];
     choices: string[];
     difficulty: string;
+    deleted?: boolean;
 }

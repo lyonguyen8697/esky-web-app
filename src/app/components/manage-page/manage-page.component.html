@@ -1,0 +1,30 @@
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <div class="card card-shadow">
+                <div class="card-header bg-dark text-white">
+                    eSky - Quản trị
+                </div>
+                <ul class="list-group list-group-flush">
+                    <a routerLink="accounts" routerLinkActive="active" class="list-group-item list-group-item-action">
+                        <i class="fas fa-users mr-1"></i>
+                        Tài khoản
+                    </a>
+                    <a routerLink="lessons" routerLinkActive="active" class="list-group-item list-group-item-action">
+                        <i class="fas fa-book mr-1"></i>
+                        Bài học
+                    </a>
+                    <a routerLink="questions" routerLinkActive="active" class="list-group-item list-group-item-action">
+                        <i class="fas fa-puzzle-piece mr-1"></i>
+                        Câu hỏi
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">Đóng góp</a>
+                    <a href="#" class="list-group-item list-group-item-action"></a>
+                </ul>
+            </div>
+        </div>
+        <div class="col-9">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>

@@ -4,14 +4,11 @@
             <router-outlet></router-outlet>
         </div>
         <div class="col-md-4">
-            <div class="card">
-                <div class="card-header bg-sky">
-                    <i class="fa fa-trophy mr-2" aria-hidden="true"></i>
-                    <strong>Xếp hạng</strong>
-                </div>
-                <div class="card-body">
-                    Nothing to do here
-                </div>
+            <div class="mb-4">
+                <app-ranking-card [user]="user"></app-ranking-card>
+            </div>
+            <div>
+                <app-user-level-card [user]="user"></app-user-level-card>
             </div>
         </div>
     </div>

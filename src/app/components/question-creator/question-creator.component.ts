@@ -437,13 +437,15 @@ export class QuestionCreatorComponent implements OnInit {
     create() {
         if (this.isCreate && this.isFormChanged && this.isFormValid) {
             this.contributor.insertQuestion(this.note.value, this.serialize())
-                .subscribe(res => {
-                    if (res.status === 200) {
-                        this.serverError = '';
-                    } else {
-                        this.serverError = res.message;
-                    }
+                .finally(() => {
                     this.showModal(this.responseModal);
+                })
+                .subscribe(
+                () => {
+                    this.serverError = '';
+                },
+                (error) => {
+                    this.serverError = error.message;
                 });
             this.submitting = true;
             this.disableForm();
@@ -453,13 +455,15 @@ export class QuestionCreatorComponent implements OnInit {
     save() {
         if (!this.isCreate && this.isFormChanged && this.isFormValid) {
             this.contributor.updateQuestion(this.note.value, this.serialize())
-                .subscribe(res => {
-                    if (res.status === 200) {
-                        this.serverError = '';
-                    } else {
-                        this.serverError = res.message;
-                    }
+                .finally(() => {
                     this.showModal(this.responseModal);
+                })
+                .subscribe(
+                () => {
+                    this.serverError = '';
+                },
+                (error) => {
+                    this.serverError = error.message;
                 });
             this.submitting = true;
             this.disableForm();
@@ -470,13 +474,15 @@ export class QuestionCreatorComponent implements OnInit {
         this.hideModal(this.deleteModal);
         if (!this.isCreate) {
             this.contributor.deleteQuestion(this.deleteNote, this.question.id)
-                .subscribe(res => {
-                    if (res.status === 200) {
-                        this.serverError = '';
-                    } else {
-                        this.serverError = res.message;
-                    }
+                .finally(() => {
                     this.showModal(this.responseModal);
+                })
+                .subscribe(
+                () => {
+                    this.serverError = '';
+                },
+                (error) => {
+                    this.serverError = error.message;
                 });
         }
     }

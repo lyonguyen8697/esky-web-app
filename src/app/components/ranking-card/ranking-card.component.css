@@ -1,0 +1,21 @@
+.ranking-list {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 200px;
+}
+.user-avatar {
+    vertical-align: -0.4rem;
+}
+.rank-number {
+    font-size: 1.5rem;
+    font-weight: bolder;
+}
+.user-rank {
+    font-size: 1rem;
+    margin-right: -0.5rem;
+}
+.ellipsis {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }

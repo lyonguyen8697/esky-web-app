@@ -1,0 +1,17 @@
+.card-header img {
+    vertical-align: -0.05rem;
+}
+.new-contribute-card {
+    font-size: 1.1rem;
+}
+.logs-container {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 80vh;
+}
+.logs-container::-webkit-scrollbar { 
+    display: none; 
+}
+.loading {
+    position: relative;
+}

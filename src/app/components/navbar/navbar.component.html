@@ -46,7 +46,7 @@
                                 <div class="search-items">
                                     <div *ngFor="let item of questionItems">
                                         <a routerLink="creator/question/{{item.id}}" class="search-item text-dark nav-btn ellipsis d-block p-2" (click)="searchItemClicked()">
-                                            <i class="fas fa-question-circle mr-1"></i>
+                                            <i class="fas fa-puzzle-piece mr-1"></i>
                                             <span>{{item.name}}</span>
                                             <span class="text-muted">#{{item.caption | alias}}</span>
                                         </a>

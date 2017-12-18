@@ -12,10 +12,12 @@ import { HomeModule } from './modules/home.module';
 import { StudyModule } from './modules/study.module';
 import { LibraryModule } from './modules/library.module';
 import { CreatorModule } from './modules/creator.module';
+import { ManageModule } from './modules/manage.module';
 import { SharedModule } from './modules/shared.module';
 
 import { AppComponent } from './app.component';
 import { NgProgressModule, NgProgressBrowserXhr } from 'ngx-progressbar';
+
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 
@@ -39,6 +41,7 @@ import { ClickOutsideDirective } from './directives/click-outside.directive';
     StudyModule,
     LibraryModule,
     CreatorModule,
+    ManageModule,
     AppRoutingModule,
     UserModule,
     AuthenticationModule,

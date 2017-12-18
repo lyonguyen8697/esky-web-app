@@ -10,23 +10,19 @@ import 'rxjs/add/operator/catch';
 @Injectable()
 export class VerifyService {
 
-    verifyApi = 'api/users/verify/';
+    verifyApi = 'api/accounts/verify';
 
     constructor(private http: Http) { }
 
     verify(token: string): Observable<any> {
-        return this.http.get(RequestUtils.getFullUrl(this.verifyApi + token))
-        .map(res => res.json())
-        .catch(res => Observable.of(res.json()));
+        return this.http.get(RequestUtils.getFullUrl(this.verifyApi + '/' + token))
+            .map(res => res.json())
+            .catch(res => Observable.of(res.json()));
     }
 
     resendVerify(id: string): Observable<boolean> {
-        return this.http.get(RequestUtils.getFullUrl(this.getResendApi(id)))
-        .map(() => true)
-        .catch(() => Observable.of(false));
-    }
-
-    getResendApi(id: string): string {
-        return 'api/users/' + id + '/verify';
+        return this.http.get(RequestUtils.getFullUrl('api/accounts/' + id + '/verify'))
+            .map(() => true)
+            .catch(() => Observable.of(false));
     }
 }

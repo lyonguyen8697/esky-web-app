@@ -7,6 +7,7 @@ import { AuthenticationHttp } from './authentication-http.service';
 import { RequestUtils } from '../utils/request.utils';
 import { Question } from '../models/question.model';
 import { ItemMetadata } from '../models/item-metadata.model';
+import { Log } from '../models/log.model';
 
 import 'rxjs/add/operator/map';
 
@@ -15,7 +16,7 @@ export class QuestionService {
 
     apiUrl = '/api/questions';
 
-    constructor(private authHttp: AuthenticationHttp) {}
+    constructor(private authHttp: AuthenticationHttp) { }
 
     search(key: string): Observable<ItemMetadata[]> {
         return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl + '/search/' + key))
@@ -24,12 +25,36 @@ export class QuestionService {
 
     getAll(): Observable<Question[]> {
         return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl))
-        .map(res => res.json());
+            .map(res => res.json());
     }
 
-    get(id: string): Observable<Question> {
+    getById(id: string): Observable<Question> {
         return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl + '/' + id))
-        .map(res => res.json());
+            .map(res => res.json());
+    }
+
+    getLogs(start = 0, count = 0): Observable<Log[]> {
+        return this.authHttp.get(RequestUtils.getFullUrl(`${this.apiUrl}/log?start=${start}&count=${count}`))
+            .map(res => res.json().map(log => RequestUtils.mapQuestionLog(log)));
+    }
+
+    getLogById(id: string): Observable<Log> {
+        return this.authHttp.get(RequestUtils.getFullUrl(`${this.apiUrl}/log/${id}`))
+            .map(res => RequestUtils.mapQuestionLog(res.json()));
+    }
+
+    acceptContribute(id: string): Observable<any> {
+        return this.authHttp.get(RequestUtils.getFullUrl(`${this.apiUrl}/log/${id}/accept`))
+            .catch(error => {
+                throw error.json();
+            });
+    }
+
+    rejectContribute(id: string): Observable<any> {
+        return this.authHttp.get(RequestUtils.getFullUrl(`${this.apiUrl}/log/${id}/reject`))
+            .catch(error => {
+                throw error.json();
+            });
     }
 
     checkAnswer(question: Question, answer: string) {
@@ -42,6 +67,16 @@ export class QuestionService {
                 return question.answers.includes(answer);
         }
         return false;
+    }
+
+    delete(id: string): Observable<any> {
+        return this.authHttp.delete(RequestUtils.getFullUrl(this.apiUrl + '/' + id))
+            .catch(error => Observable.of(error.json()));
+    }
+
+    restore(id: string): Observable<any> {
+        return this.authHttp.post(RequestUtils.getFullUrl(this.apiUrl + '/' + id), null)
+            .catch(error => Observable.of(error.json()));
     }
 
 }

@@ -31,10 +31,17 @@ export class FilterPipe implements PipeTransform {
     }
 
     isMatch(item: any, filter: any): boolean {
-        if (typeof item === 'string' && typeof filter === 'string') {
-            return item.toLocaleLowerCase().includes(filter.toLocaleLowerCase());
+        if (filter === undefined) {
+            return true;
+        }
+        if (this.isPrimitive(filter)) {
+            if (typeof item === 'string' && typeof filter === 'string') {
+                return item.toLocaleLowerCase().includes(filter.toLocaleLowerCase());
+            } else {
+                return item === filter;
+            }
         } else {
-            return item === filter;
+            return filter.comparer(item, filter.value);
         }
     }
 }

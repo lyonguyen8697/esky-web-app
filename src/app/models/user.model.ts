@@ -7,6 +7,8 @@ export interface User {
     name: string;
     avatar: string;
     role: string;
+    verified: boolean;
+    lastChange: Date;
+    deleted: boolean;
     token: string;
-
 }

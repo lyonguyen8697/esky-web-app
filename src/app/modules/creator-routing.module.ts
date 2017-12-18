@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { CreatorPageComponent } from '../components/creator-page/creator-page.component';
+import { CreatorCentralComponent } from '../components/creator-central/creator-central.component';
 import { LessonCreatorComponent } from '../components/lesson-creator/lesson-creator.component';
 import { QuestionCreatorComponent } from '../components/question-creator/question-creator.component';
 
@@ -43,8 +44,7 @@ const creatorRoutes: Routes = [
             },
             {
                 path: '',
-                redirectTo: '/',
-                pathMatch: 'full'
+                component: CreatorCentralComponent
             }
         ]
     }

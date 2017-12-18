@@ -10,7 +10,11 @@
                     <strong>{{user?.email}}</strong>
                 </p>
                 <p>Kiểm tra email của bạn và click theo đường dẫn để hoàn tất quá trình đăng ký.</p>
-                <p>Không tìm thấy email? Gửi lại email xác nhận</p>
+                <p>Không tìm thấy email? 
+                   <button type="button" class="btn btn-info m-2" (click)="resendEmail()" [disabled]="submiting">
+                       Gửi lại email xác nhận
+                    </button>
+                </p>
             </div>
         </div>
         <div *ngSwitchCase="1">

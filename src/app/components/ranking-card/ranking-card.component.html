@@ -1,0 +1,23 @@
+<div class="card card-shadow">
+    <div class="card-header bg-warning">
+        <i class="fas fa-trophy"></i>
+        <strong>Bảng xếp hạng</strong>
+        <div class="float-right">
+            <span class="badge badge-success user-rank">{{userRank}}</span>
+        </div>
+    </div>
+    <ul class="ranking-list list-group list-group-flush rounded-bottom">
+        <div *ngFor="let learner of ranking; index as i">
+            <a routerLink="/{{learner.username}}" class="list-group-item list-group-item-action ellipsis px-3"
+            [class.bg-sky]="user && learner.id === user.id">
+                <img class="mr-1" src="assets/icons/wreath.svg" alt="Top 1" width="24" height="24" [hidden]="i !== 0">
+                <img class="mr-1" src="assets/icons/christmas-wreath.svg" alt="Top 2" width="24" height="24" [hidden]="i !== 1">
+                <img class="mr-1" src="assets/icons/wreath2.svg" alt="Top 3" width="24" height="24" [hidden]="i !== 2">
+                <span class="rank-number mx-1 text-warning" [hidden]="i < 3">{{i + 1}}</span>
+                <img class="rounded-circle user-avatar mr-1" src="assets/icons/user.svg" alt="Avatar" width="24" height="24">
+                <span class="user-name">{{learner.name}}</span>
+                <span class="text-muted">#{{learner.username}}</span>
+            </a>
+        </div>
+    </ul>
+</div>

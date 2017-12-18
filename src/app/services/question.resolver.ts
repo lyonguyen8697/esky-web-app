@@ -18,7 +18,7 @@ export class QuestionResolver implements Resolve<Question> {
 
     resolve(route: ActivatedRouteSnapshot): Observable<Question> {
         const id = route.params['id'];
-        return this.questionService.get(id)
+        return this.questionService.getById(id)
         .catch(() => {
             this.router.navigate(['404']);
             return Observable.of(null);

@@ -1,0 +1,71 @@
+<div class="row">
+    <div class="col-3">
+        <div class="card card-shadow mb-3">
+            <div class="card-header bg-dark text-white">
+                <img src="/assets/icons/light-bulb.svg" class="mr-1" alt="Creative" width="25" height="25"> Be Creative
+            </div>
+            <ul class="list-group list-group-flush">
+                <button class="list-group-item list-group-item-action" [class.active]="filterMode === 0" (click)="showNew()">
+                    <i class="fas fa-newspaper mr-1"></i>
+                    Đóng góp mới
+                    <span class="badge badge-info ml-1">new</span>
+                </button>
+                <button class="list-group-item list-group-item-action" [class.active]="filterMode === 1" (click)="showWait()">
+                    <i class="fas fa-book mr-1"></i>
+                    Phê duyệt
+                    <span class="badge badge-pill badge-warning float-right">{{waitCount}}</span>
+                </button>
+            </ul>
+        </div>
+        <div class="card card-shadow new-contribute-card">
+            <ul class="list-group list-group-flush">
+                <a routerLink="lesson" class="list-group-item list-group-item-active">
+                    <i class="fas fa-book mr-1"></i>
+                    Tạo bài học mới!!
+                </a>
+                <a routerLink="question" class="list-group-item list-group-item-active">
+                    <i class="fas fa-puzzle-piece mr-1"></i>
+                    Tạo câu hỏi mới!!!
+                </a>
+            </ul>
+        </div>
+    </div>
+    <div class="col-9">
+        <div class="search">
+            <input type="search" class="form-control" placeholder="Tìm kiếm" [(ngModel)]="searchKey" (ngModelChange)="search()" trim>
+        </div>
+        <div class="logs-container">
+            <div *ngFor="let item of searchedItem" class="my-2">
+                <app-contribute-card [log]="item.log" [user]="item.user" [disabled]="submiting" [isManager]="isManager" (accept)="acceptButtonClicked($event)"
+                    (reject)="rejectButtonClicked($event)"></app-contribute-card>
+            </div>
+            <div class="loading m-3" [hidden]="!loading">
+                <spinner-component [spinnerShow]="true"></spinner-component>
+            </div>
+        </div>
+    </div>
+</div>
+<app-modal [modal]="confirmModal" [title]="'Thông báo'">
+    <p>{{confirmContent}}</p>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary ml-2" (click)="confirmOk()">
+            Đồng ý
+        </button>
+        <button type="button" class="btn btn-secondary ml-2" (click)="confirmCancel()">
+            Quay lại
+        </button>
+    </div>
+</app-modal>
+<app-modal [modal]="responseModal" [title]="'Thông báo'">
+    <div *ngIf="serverError; else success">
+        <p class="text-center">Lỗi: {{serverError}}!</p>
+    </div>
+    <ng-template #success>
+        <p class="text-center">Thao tác thành công</p>
+    </ng-template>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary ml-2" (click)="hideModal(this.responseModal)">
+            Đồng ý
+        </button>
+    </div>
+</app-modal>

@@ -42,6 +42,19 @@ export class LearnerService {
             });
     }
 
+    getById(id: string) {
+        return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl + '/' + id))
+            .map(res => res.json())
+            .mergeMap(res => {
+                const learner = new Learner(res);
+                return this.getLevelInfo().map((levelInfo: LevelInfo) => {
+                    learner.levelInfo = levelInfo;
+                    this.storage.setLearner(learner);
+                    return learner;
+                });
+            });
+    }
+
     getLevelInfo(): Observable<LevelInfo> {
         return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl + '/levelinfo'))
             .map(res => res.json());
@@ -65,6 +78,16 @@ export class LearnerService {
     getLessonReward(lessonId): Observable<number> {
         return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl + '/lessons/' + lessonId + '/reward'))
             .map(res => res.json().experience);
+    }
+
+    getRank(id: string): Observable<{ rank: number }> {
+        return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl + '/' + id + '/rank'))
+            .map(res => res.json());
+    }
+
+    getRanking(limit?: number): Observable<User[]> {
+        return this.authHttp.get(RequestUtils.getFullUrl(this.apiUrl + '/ranking'))
+            .map(res => res.json());
     }
 
     test(): Observable<string> {

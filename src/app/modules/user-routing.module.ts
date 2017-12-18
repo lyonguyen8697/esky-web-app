@@ -2,14 +2,14 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AuthGuard } from '../guards/auth.guard';
-import { UserInfoComponent } from '../components/user-info/user-info.component';
+import { UserProfilePageComponent } from '../components/user-profile-page/user-profile-page.component';
 import { UserResolve } from '../services/user.resolve.service';
 
 const userRoutes: Routes = [
     {
         path: ':username',
         canActivate: [AuthGuard],
-        component: UserInfoComponent,
+        component: UserProfilePageComponent,
         resolve: {
             user: UserResolve
         },

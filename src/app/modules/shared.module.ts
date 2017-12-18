@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -9,7 +10,10 @@ import { MultiChoiceAnswerCardComponent } from '../components/multi-choice-answe
 import { ArrangementAnswerCardComponent } from '../components/arrangement-answer-card/arrangement-answer-card.component';
 import { SpeechAnswerCardComponent } from '../components/speech-answer-card/speech-answer-card.component';
 import { TypingAnswerCardComponent } from '../components/typing-answer-card/typing-answer-card.component';
+import { QuestionsPreviewCardComponent } from '../components/questions-preview-card/questions-preview-card.component';
 import { QuestionsTableComponent } from '../components/questions-table/questions-table.component';
+import { RankingCardComponent } from '../components/ranking-card/ranking-card.component';
+import { UserLevelCardComponent } from '../components/user-level-card/user-level-card.component';
 import { ModalComponent } from '../components/modal/modal.component';
 import { TooltipComponent } from '../components/tooltip/tooltip.component';
 import { ProgressbarComponent } from '../components/progressbar/progressbar.component';
@@ -30,7 +34,9 @@ import { AliasPipe } from '../pipes/alias.pipe';
 @NgModule({
     imports: [
         CommonModule,
-        FormsModule
+        RouterModule,
+        FormsModule,
+        SpinnerComponentModule
     ],
     declarations: [
         QuestionCardComponent,
@@ -38,7 +44,10 @@ import { AliasPipe } from '../pipes/alias.pipe';
         MultiChoiceAnswerCardComponent,
         SpeechAnswerCardComponent,
         TypingAnswerCardComponent,
+        QuestionsPreviewCardComponent,
         QuestionsTableComponent,
+        RankingCardComponent,
+        UserLevelCardComponent,
         ModalComponent,
         TooltipComponent,
         ProgressbarComponent,
@@ -48,6 +57,7 @@ import { AliasPipe } from '../pipes/alias.pipe';
     ],
     exports: [
         CommonModule,
+        RouterModule,
         FormsModule,
         ReactiveFormsModule,
         SpinnerComponentModule,
@@ -56,7 +66,10 @@ import { AliasPipe } from '../pipes/alias.pipe';
         MultiChoiceAnswerCardComponent,
         SpeechAnswerCardComponent,
         TypingAnswerCardComponent,
+        QuestionsPreviewCardComponent,
         QuestionsTableComponent,
+        RankingCardComponent,
+        UserLevelCardComponent,
         ModalComponent,
         TooltipComponent,
         ProgressbarComponent,

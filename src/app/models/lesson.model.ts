@@ -4,6 +4,7 @@ export interface Lesson {
     title: string;
     description: string;
     level: number;
+    deleted?: boolean;
     answered?: string[];
     remains?: string[];
     experience?: number;

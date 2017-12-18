@@ -1,0 +1,30 @@
+.user-avatar {
+    vertical-align: -0.4rem;
+}
+.card-header {
+    font-size: 1rem;
+}
+.card-body {
+    position: relative;
+}
+.lesson-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+.note {
+    font-size: 1.2rem;
+}
+.note span {
+    vertical-align: -0.2rem;
+}
+.status-icon {
+    font-size: 1.5rem;
+}
+.log-time {
+    font-size: 1rem;
+}
+.ellipsis {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}

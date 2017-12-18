@@ -251,7 +251,7 @@
         </button>
     </div>
 </app-modal>
-<app-modal [modal]="responseModal" [title]="'Thông báo'">
+<app-modal [modal]="responseModal" [title]="'Thông báo'" (hide)="accept()">
     <div *ngIf="serverError; else success">
         <p class="text-center">Lỗi: {{serverError}}!</p>
     </div>

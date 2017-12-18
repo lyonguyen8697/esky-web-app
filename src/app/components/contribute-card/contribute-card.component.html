@@ -1,0 +1,67 @@
+<div class="card card-shadow">
+    <div class="card-header bg-sky">
+        <div *ngIf="log">
+            <a routerLink="/{{user?.username}}">
+                <img class="rounded-circle user-avatar" src="assets/icons/user.svg" alt="Avatar" width="24" height="24">
+                <span>{{user?.name}}</span>
+                <span class="text-muted">#{{user?.username}}</span>
+            </a>
+            <span [hidden]="log.accepted !== true">đã</span>
+            <span [hidden]="log.accepted !== null">đề xuất</span>
+            <span [hidden]="log.accepted !== false">đã đề xuất</span>
+            <span [hidden]="log.method !== 'INSERT'">thêm</span>
+            <span [hidden]="log.method !== 'UPDATE'">cập nhật</span>
+            <span [hidden]="log.method !== 'DELETE'">xóa</span>
+            <a routerLink="{{log.lesson ? 'lesson/' + log.lesson.id : 'question/' + log.question.id}}">
+                <span>{{log.lesson ? 'Bài học' : 'Câu hỏi'}}</span>
+                <span [hidden]="log.method === 'INSERT'">#{{log.lesson ? log.lesson.id : log.question.id}}</span>
+            </a>
+            <i class="status-icon fas fa-check text-success float-right" [hidden]="log.accepted !== true"></i>
+            <i class="status-icon fas fa-times text-danger float-right" [hidden]="log.accepted !== false"></i>
+            <i class="status-icon fas fa-clock text-warning float-right" [hidden]="log.accepted !== null"></i>
+        </div>
+    </div>
+    <div class="card-body px-3 py-2">
+        <div *ngIf="log; else loading">
+            <div class="mb-2" *ngIf="log.method !== 'DELETE'">
+                <div *ngIf="log.lesson; else question">
+                    <div class="mb-1">
+                        <span class="lesson-title">{{log.lesson.title}}</span>
+                        <span class="text-muted mr-5">#{{log.lesson.subject}}</span>
+                        <span class="float-right">{{log.lesson.description}}</span>
+                    </div>
+                    <app-questions-preview-card [questions]="questions" [speechOnInit]="false"></app-questions-preview-card>
+                </div>
+                <ng-template #question>
+                    <app-questions-preview-card [questions]="[log.question]" [speechOnInit]="false" [closeButton]="false"></app-questions-preview-card>
+                </ng-template>
+            </div>
+            <div class="note" [class.text-center]="log.method === 'DELETE'" [hidden]="log.method === 'INSERT'">
+                <img class="mr-1" src="/assets/icons/notepad.svg" alt="Ghi chú" width="32" height="32">
+                <span>{{log.note}}</span>
+            </div>
+        </div>
+        <ng-template #loading>
+            <spinner-component [spinnerShow]="true"></spinner-component>
+        </ng-template>
+    </div>
+    <div class="card-footer text-muted d-flex align-items-center px-3 py-2">
+        <span class="w-100 log-time">
+            <i class="fas fa-clock mr-1"></i>
+            {{timeAgo}} trước
+        </span>
+        <button type="button" class="btn btn-warning ml-1" [disabled]="disabled" (click)="gotoCreator()" [hidden]="log.method === 'DELETE' || (log.method === 'INSERT' && log.accepted !== true)">
+            <i class="fas fa-pencil-alt mr-1"></i>
+            Chỉnh sửa
+        </button>
+        <button type="button" class="btn btn-danger ml-1" [disabled]="disabled" [hidden]="log.accepted !== null || !isManager" (click)="rejectButtonClicked()">
+            <i class="fas fa-times mr-1"></i>
+            Từ chối
+        </button>
+        <button type="button" class="btn btn-success ml-1" [disabled]="disabled" [hidden]="log.accepted !== null || !isManager"
+            (click)="acceptButtonClicked()">
+            <i class="fas fa-check mr-1"></i>
+            Chấp nhận
+        </button>
+    </div>
+</div>

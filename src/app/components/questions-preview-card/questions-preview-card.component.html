@@ -1,0 +1,26 @@
+<div class="position-relative">
+    <div *ngIf="questions && questions.length > 0; else loading">
+        <div class="mb-1 mb-md-2" [hidden]="!processbar">
+            <app-progressbar [value]="progressValue" [striped]="true" [animated]="true" [backgroundClass]="'bg-warning'"></app-progressbar>
+        </div>
+        <div>
+            <div class="mb-1 mb-md-2" [@slideInOut]="slideState">
+                <app-question-card [question]="currentQuestion" [autoSpeech]="autoSpeech" [skipButton]="closeButton" [creatorButton]="editable"
+                    (skip)="closeButtonClicked()" (creator)="gotoQuestionCreator()"></app-question-card>
+            </div>
+            <div [ngSwitch]="currentQuestion.answerType" [@slideInOutDelay]="slideState">
+                <app-arrangement-answer-card *ngSwitchCase="answerType[0]" [question]="currentQuestion" [isCorrect]="isCorrect" (answer)="answer($event)">
+                </app-arrangement-answer-card>
+                <app-multi-choice-answer-card *ngSwitchCase="answerType[1]" [question]="currentQuestion" [isCorrect]="isCorrect" (answer)="answer($event)">
+                </app-multi-choice-answer-card>
+                <app-speech-answer-card *ngSwitchCase="answerType[2]" [question]="currentQuestion" [isCorrect]="isCorrect" (answer)="answer($event)">
+                </app-speech-answer-card>
+                <app-typing-answer-card *ngSwitchCase="answerType[3]" [question]="currentQuestion" [isCorrect]="isCorrect" (answer)="answer($event)">
+                </app-typing-answer-card>
+            </div>
+        </div>
+    </div>
+    <ng-template #loading>
+        <spinner-component [spinnerShow]="true"></spinner-component>
+    </ng-template>
+</div>

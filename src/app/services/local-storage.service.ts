@@ -34,7 +34,8 @@ export class LocalStorageService {
     setUserToken(token: string) {
         const user = this.getUser();
         user.token = token;
-        this.setUser(user);
+        this.user.emit(user);
+        localStorage.setItem(this.userLocation, JSON.stringify(user));
     }
 
     getUserToken() {
@@ -42,7 +43,7 @@ export class LocalStorageService {
     }
 
     getLearner(): Learner {
-        return JSON.parse(localStorage.getItem(this.learnerLocation));
+        return new Learner(JSON.parse(localStorage.getItem(this.learnerLocation)));
     }
 
     setLearner(learner: Learner) {

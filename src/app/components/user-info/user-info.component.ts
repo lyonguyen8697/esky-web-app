@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, EventEmitter, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, AbstractControl, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
@@ -24,11 +24,11 @@ declare var $: any;
     templateUrl: 'user-info.component.html',
     styleUrls: ['user-info.component.css']
 })
-export class UserInfoComponent implements OnInit {
+export class UserInfoComponent implements OnInit, OnChanges {
+
+    @Input() user: User;
 
     form: FormGroup;
-
-    user: User;
 
     editable: boolean;
 
@@ -105,14 +105,15 @@ export class UserInfoComponent implements OnInit {
 
     ngOnInit() {
         this.editing = false;
-        this.route.data
-            .subscribe(data => {
-                this.user = data.user;
-                this.editable = this.canEdit();
-                this.appointable = this.canAppoint();
-                this.createForm();
-                this.registerKeydown();
-            });
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (this.user) {
+            this.editable = this.canEdit();
+            this.appointable = this.canAppoint();
+            this.createForm();
+            this.registerKeydown();
+        }
     }
 
     resetForm() {
@@ -262,10 +263,10 @@ export class UserInfoComponent implements OnInit {
                         this.contributorService.appoint(this.user.id)
                             .subscribe(res => {
                                 this.userService.getById(this.user.id)
-                                .subscribe(user => {
-                                    this.user = user;
-                                    this.appointable = this.canAppoint();
-                                });
+                                    .subscribe(user => {
+                                        this.user = user;
+                                        this.appointable = this.canAppoint();
+                                    });
                             });
                     },
                     cancel: () => this.hideModal(this.confirmModal)
@@ -279,10 +280,10 @@ export class UserInfoComponent implements OnInit {
                         this.managerService.appoint(this.user.id)
                             .subscribe(res => {
                                 this.userService.getById(this.user.id)
-                                .subscribe(user => {
-                                    this.user = user;
-                                    this.appointable = this.canAppoint();
-                                });
+                                    .subscribe(user => {
+                                        this.user = user;
+                                        this.appointable = this.canAppoint();
+                                    });
                             });
                     },
                     cancel: () => this.hideModal(this.confirmModal)
